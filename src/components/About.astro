@@ -1,0 +1,83 @@
+---
+import { personalInfo } from '@/data/personal';
+import { Image } from 'astro:assets';
+---
+
+<section id="sobre-mi" class="py-20 bg-dark-800">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="animate-on-scroll">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary-400 mb-4">
+          Sobre Mí
+        </h2>
+        <div class="w-24 h-1 bg-primary-500 mx-auto"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <!-- Imagen optimizada -->
+        <div class="order-2 md:order-1">
+          <div class="relative max-w-md mx-auto">
+            <Image 
+              src={personalInfo.profileImage || "/placeholder.svg?height=400&width=400"} 
+              alt={`${personalInfo.name} - Foto de perfil`}
+              width={400}
+              height={400}
+              class="rounded-2xl shadow-2xl w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+              format="webp"
+              quality={85}
+            />
+            <!-- Efecto de fondo -->
+            <div class="absolute -inset-4 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl opacity-20 blur-xl"></div>
+          </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="order-1 md:order-2 space-y-6">
+          <div class="prose prose-lg prose-invert max-w-none">
+            <p class="text-gray-300 leading-relaxed">
+              {personalInfo.bio}
+            </p>
+            
+            <p class="text-gray-300 leading-relaxed">
+              Mi enfoque se centra en escribir código limpio, escalable y mantenible, 
+              siempre buscando las mejores prácticas y las tecnologías más actuales. 
+              Me apasiona resolver problemas complejos y transformar ideas en soluciones digitales efectivas.
+            </p>
+
+            <p class="text-gray-300 leading-relaxed">
+              Cuando no estoy programando, disfruto contribuyendo a proyectos de código abierto, 
+              aprendiendo nuevas tecnologías y compartiendo conocimientos con la comunidad de desarrolladores.
+            </p>
+          </div>
+
+          <!-- Información personal -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
+            <div class="bg-dark-700 p-4 rounded-lg">
+              <h4 class="text-primary-400 font-semibold mb-2">Ubicación</h4>
+              <p class="text-gray-300">{personalInfo.location}</p>
+            </div>
+            <div class="bg-dark-700 p-4 rounded-lg">
+              <h4 class="text-primary-400 font-semibold mb-2">Email</h4>
+              <p class="text-gray-300">{personalInfo.email}</p>
+            </div>
+          </div>
+
+          <!-- Botón CV -->
+          <div class="pt-6">
+            <a 
+              href="/cv.pdf" 
+              download
+              class="inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary-500/25"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 28 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              Descargar CV
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

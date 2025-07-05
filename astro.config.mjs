@@ -1,5 +1,23 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+import tailwind from '@tailwindcss/vite';
+import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  vite: {
+    plugins: [tailwind()]
+  },
+  integrations: [
+    tailwind({
+      applyBaseStyles: true,
+    }),
+    mdx(),
+    sitemap()
+  ],
+  markdown: {
+    shikiConfig: {
+      theme: 'github-dark',
+      wrap: true
+    }
+  }
+});

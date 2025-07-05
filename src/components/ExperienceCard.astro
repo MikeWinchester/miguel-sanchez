@@ -1,0 +1,35 @@
+---
+import { type Experience } from '@/types';
+
+export interface Props {
+  experience: Experience;
+}
+
+const { experience } = Astro.props;
+---
+
+<div class="bg-dark-700 rounded-xl p-6 hover:bg-dark-600 transition-all duration-300 card-hover border border-dark-600">
+  <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
+    <div class="mb-2 md:mb-0">
+      <h3 class="text-xl font-bold text-white mb-1">{experience.position}</h3>
+      <p class="text-primary-400 font-semibold">{experience.company}</p>
+    </div>
+    <div class="text-xs text-gray-400 bg-dark-800 px-3 py-1 rounded-full whitespace-nowrap">
+      {experience.startDate} - {experience.endDate}
+    </div>
+  </div>
+  
+  <p class="text-gray-300 leading-relaxed mb-4">
+    {experience.description}
+  </p>
+
+  {experience.technologies && experience.technologies.length > 0 && (
+    <div class="flex flex-wrap gap-2">
+      {experience.technologies.map((tech) => (
+        <span class="bg-primary-500/20 text-primary-300 px-3 py-1 rounded-full text-xs font-medium">
+          {tech}
+        </span>
+      ))}
+    </div>
+  )}
+</div>

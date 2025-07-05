@@ -1,0 +1,24 @@
+---
+import { type Skill } from '@/types';
+
+export interface Props {
+  skill: Skill;
+}
+
+const { skill } = Astro.props;
+---
+
+<div class="mb-6">
+  <div class="flex justify-between items-center mb-2">
+    <span class="text-white font-medium">{skill.name}</span>
+    <span class="text-primary-400 text-sm font-semibold">{skill.level}%</span>
+  </div>
+  <div class="w-full bg-dark-600 rounded-full h-3 overflow-hidden">
+    <div 
+      class="skill-bar h-3 rounded-full"
+      data-level={skill.level}
+      style="width: 0%"
+    >
+    </div>
+  </div>
+</div>
