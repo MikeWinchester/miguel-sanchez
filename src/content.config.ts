@@ -26,8 +26,3 @@ const projects = defineCollection({
     slug: z.string(),
   }),
 });
-
-export const collections = {
-  experiences,
-  projects
-};
