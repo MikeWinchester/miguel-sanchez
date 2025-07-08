@@ -9,12 +9,18 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/markdoc": "^0.15.0",
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/sitemap": "^3.4.1",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.10",
     "@types/node": "^24.0.3",
-    "astro": "^5.10.1",
+    "astro": "^5.11.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-emoji": "^3.0.0",
+    "markdown-it-toc-done-right": "^4.2.0",
+    "prismjs": "^1.30.0",
     "tailwindcss": "^4.1.10"
   }
 }

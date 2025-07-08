@@ -15,6 +15,7 @@ export default defineConfig({
     sitemap()
   ],
   markdown: {
+    syntaxHighlight: 'shiki',
     shikiConfig: {
       theme: 'github-dark',
       wrap: true

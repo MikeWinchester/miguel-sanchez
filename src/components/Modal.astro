@@ -22,10 +22,10 @@ const iconColorClass = {
 }[modal.x_background] || 'text-gray-400';
 ---
 
-<div id={modal.type} class="modal-container hidden">
+<div id={modal.type} class="modal-container">
   <div class="modal-backdrop"></div>
   <div class="modal-content">
-    <div class="modal-inner">
+    <div class=<div class="flex flex-col items-center text-center">
       <div class={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${bgColorClass}`}>
         <svg class={`h-6 w-6 ${iconColorClass}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={modal.dimensions}/>
@@ -38,8 +38,8 @@ const iconColorClass = {
         </div>
       </div>
       <div class="mt-6 flex justify-center">
-        <button id={modal.css_id} type="button" class="modal-close-btn">
-          De acuerdo (<span id="countdown">5</span>)
+        <button id={modal.css_id} type="button" class="px-6 py-2 mt-4 bg-green-600 text-white rounded-lg font-medium text-base transition-all duration-200 ease-in-out hover:bg-green-700 hover:-translate-y-0.5">
+          De acuerdo (<span id={modal.countdown_id}>5</span>)
         </button>
       </div>
     </div>

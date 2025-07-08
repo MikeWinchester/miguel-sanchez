@@ -7,6 +7,7 @@ export const personalInfo: PersonalInfo = {
   location: "Tegucigalpa, Honduras",
   bio: "Soy un desarrollador apasionado por crear soluciones tecnológicas innovadoras. Con más de X años de experiencia en desarrollo web, me especializo en tecnologías modernas como React, Node.js y bases de datos NoSQL. Cuando no estoy programando, disfruto de la fotografía y los videojuegos retro.",
   profileImage: "/img/profile.jpeg",
+  aboutMeImage: "/img/about-me.jpeg",
   socialLinks: {
     github: "https://www.github.com/MikeWinchester",
     linkedin: "https://www.linkedin.com/in/miguelsanchez789",

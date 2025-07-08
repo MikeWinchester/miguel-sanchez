@@ -13,12 +13,14 @@ export interface Project {
   id: string
   title: string
   description: string
+  date: string
   image: string
   technologies: string[]
-  githubUrl: string
+  githubUrl?: string
   liveUrl?: string
   featured: boolean
   slug: string
+  category: string
 }
 
 export interface Skill {
@@ -54,6 +56,7 @@ export interface PersonalInfo {
   location: string
   bio: string
   profileImage: string
+  aboutMeImage: string
   socialLinks: {
     github: string
     linkedin: string
@@ -63,6 +66,7 @@ export interface PersonalInfo {
 
 export interface Modal{
   css_id: string
+  countdown_id: string
   title: string
   type: string
   message: string

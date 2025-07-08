@@ -1,35 +1,36 @@
 ---
 import { personalInfo } from '@/data/personal';
-
 import Modal from './Modal.astro';
 
 const modalSuccessData = {
-  css_id:"success-close-btn",
-  title:"¡Mensaje enviado!",
+  css_id: "success-close-btn",
+  title: "¡Mensaje enviado!",
   type: "success-modal",
-  message:"Gracias por contactarme. Te responderé lo antes posible.",
-  x_background:"green",
-  dimensions:"M5 13l4 4L19 7",
+  message: "Gracias por contactarme. Te responderé lo antes posible.",
+  x_background: "green",
+  dimensions: "M5 13l4 4L19 7",
+  countdown_id: "success-countdown"
 };
 
 const modalErrorData = {
-  css_id:"error-close-btn",
-  title:"Error al enviar",
+  css_id: "error-close-btn",
+  title: "Error al enviar",
   type: "error-modal",
-  message:"Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde.",
-  x_background:"red",
-  dimensions:"M6 18L18 6M6 6l12 12",
+  message: "Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde.",
+  x_background: "red",
+  dimensions: "M6 18L18 6M6 6l12 12",
+  countdown_id: "error-countdown"
 };
 ---
 
-<section id="contacto" class="py-20 bg-dark-800">
+<section id="contacto" class="py-20 bg-slate-800">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="animate-on-scroll">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-          <span class="text-primary-400">Contáctame</span>
+          <span class="text-green-400">Contáctame</span>
         </h2>
-        <div class="w-24 h-1 bg-primary-500 mx-auto mb-6"></div>
+        <div class="w-24 h-1 bg-green-500 mx-auto mb-6"></div>
         <p class="text-gray-400 max-w-2xl mx-auto">
           ¿Tienes un proyecto en mente? Me encantaría escuchar sobre él y ver cómo puedo ayudarte.
         </p>
@@ -49,8 +50,8 @@ const modalErrorData = {
           <!-- Información de contacto -->
           <div class="space-y-6">
             <div class="flex items-center space-x-4">
-              <div class="bg-primary-500/20 p-4 rounded-lg">
-                <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="bg-green-500/20 p-4 rounded-lg">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
               </div>
@@ -61,8 +62,8 @@ const modalErrorData = {
             </div>
 
             <div class="flex items-center space-x-4">
-              <div class="bg-primary-500/20 p-4 rounded-lg">
-                <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="bg-green-500/20 p-4 rounded-lg">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
@@ -82,7 +83,7 @@ const modalErrorData = {
                 href={personalInfo.socialLinks.github} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="bg-dark-700 hover:bg-primary-600 p-4 rounded-lg transition-all duration-300 hover:scale-110"
+                class="bg-dark-700 hover:bg-green-600 p-4 rounded-lg transition-all duration-300 hover:scale-110"
                 aria-label="GitHub"
               >
                 <svg class="w-6 h-6 text-gray-400 hover:text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -93,7 +94,7 @@ const modalErrorData = {
                 href={personalInfo.socialLinks.linkedin} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="bg-dark-700 hover:bg-primary-600 p-4 rounded-lg transition-all duration-300 hover:scale-110"
+                class="bg-dark-700 hover:bg-green-600 p-4 rounded-lg transition-all duration-300 hover:scale-110"
                 aria-label="LinkedIn"
               >
                 <svg class="w-6 h-6 text-gray-400 hover:text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -105,7 +106,7 @@ const modalErrorData = {
                   href={personalInfo.socialLinks.youtube} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  class="bg-dark-700 hover:bg-primary-600 p-4 rounded-lg transition-all duration-300 hover:scale-110"
+                  class="bg-dark-700 hover:bg-green-600 p-4 rounded-lg transition-all duration-300 hover:scale-110"
                   aria-label="YouTube"
                 >
                   <svg class="w-6 h-6 text-gray-400 hover:text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -118,9 +119,9 @@ const modalErrorData = {
         </div>
 
         <!-- Formulario de contacto -->
-        <div class="bg-dark-700 rounded-xl p-8 border border-dark-600">
+        <div class="bg-dark-700 rounded-xl p-8 border border-slate-600">
           <form 
-            action="https://formspree.io/f/xjkrlllng" 
+            action="https://formspree.io/f/xjkrllng" 
             method="POST"
             class="space-y-6"
             id="contact-form"
@@ -134,7 +135,7 @@ const modalErrorData = {
                 id="name" 
                 name="name" 
                 required
-                class="w-full px-4 py-3 bg-dark-600 border border-dark-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
                 placeholder="Tu nombre completo"
               />
             </div>
@@ -148,7 +149,7 @@ const modalErrorData = {
                 id="email" 
                 name="email" 
                 required
-                class="w-full px-4 py-3 bg-dark-600 border border-dark-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
                 placeholder="tu@email.com"
               />
             </div>
@@ -161,7 +162,7 @@ const modalErrorData = {
                 type="text" 
                 id="subject" 
                 name="subject"
-                class="w-full px-4 py-3 bg-dark-600 border border-dark-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                class="w-full px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
                 placeholder="Asunto del mensaje"
               />
             </div>
@@ -175,14 +176,14 @@ const modalErrorData = {
                 name="message" 
                 rows="5" 
                 required
-                class="w-full px-4 py-3 bg-dark-600 border border-dark-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 resize-vertical"
+                class="w-full px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 resize-vertical"
                 placeholder="Cuéntame sobre tu proyecto o consulta..."
               ></textarea>
             </div>
 
             <button 
               type="submit"
-              class="send-btn w-full bg-primary-600 hover:bg-primary-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary-500/25 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-700"
+              class="send-btn w-full bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-700"
             >
               <span class="flex items-center justify-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 28 24">
@@ -198,7 +199,6 @@ const modalErrorData = {
   </div>
 
   <Modal modal={modalSuccessData}/>
-
   <Modal modal={modalErrorData}/>
 
 <script is:inline src="/js/contactForm.js" defer></script>

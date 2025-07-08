@@ -1,10 +1,9 @@
 ---
 import { personalInfo } from '@/data/personal';
 import { Image } from 'astro:assets';
-
 ---
 
-<section id="inicio" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 pt-16">
+<section id="inicio" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-16">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <div class="animate-on-scroll">
       <!-- Imagen de perfil optimizada con tamaños personalizables -->
@@ -12,24 +11,24 @@ import { Image } from 'astro:assets';
         <!-- Contenedor que controla el tamaño visual -->
         <div class="relative w-36 h-36 md:w-48 md:h-48 mx-auto">
           <Image 
-            src={personalInfo.profileImage || "/placeholder.svg?height=200&width=200"} 
+            src={personalInfo.profileImage || "/placeholder.svg"} 
             alt={personalInfo.name}
             width={200}
             height={200}
-            class="w-full h-full object-cover rounded-full border-4 border-primary-500 shadow-2xl shadow-primary-500/20 hover:scale-105 transition-transform duration-300"
+            class="w-full h-full object-cover rounded-full border-4 border-green-500 shadow-2xl shadow-green-500/20 hover:scale-105 transition-transform duration-300"
             loading="eager"
-            format="webp"
+            format="jpeg"
             quality={90}
           />
           <!-- Anillo decorativo que se adapta al tamaño del contenedor -->
-          <div class="absolute -inset-2 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full opacity-20 blur-sm animate-spin-slow"></div>
+          <div class="absolute bg-gradient-to-r from-green-500 to-green-600 rounded-full opacity-20 blur-sm animate-spin"></div>
         </div>
       </div>
 
       <!-- Nombre y profesión -->
       <div class="mb-8">
         <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
-          <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+          <span class="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
             {personalInfo.name}
           </span>
         </h1>
@@ -45,13 +44,13 @@ import { Image } from 'astro:assets';
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
         <a 
           href="#proyectos" 
-          class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary-500/25"
+          class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25"
         >
           Ver Proyectos
         </a>
         <a 
           href="#contacto" 
-          class="border border-primary-500 text-primary-400 hover:bg-primary-500 hover:text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
+          class="border border-green-500 text-green-400 hover:bg-green-500 hover:text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105"
         >
           Contáctame
         </a>
@@ -63,7 +62,7 @@ import { Image } from 'astro:assets';
           href={personalInfo.socialLinks.github} 
           target="_blank" 
           rel="noopener noreferrer"
-          class="text-gray-400 hover:text-primary-400 transition-colors duration-300 hover:scale-110 transform"
+          class="text-gray-400 hover:text-green-400 transition-colors duration-300 hover:scale-110 transform"
           aria-label="GitHub"
         >
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -74,7 +73,7 @@ import { Image } from 'astro:assets';
           href={personalInfo.socialLinks.linkedin} 
           target="_blank" 
           rel="noopener noreferrer"
-          class="text-gray-400 hover:text-primary-400 transition-colors duration-300 hover:scale-110 transform"
+          class="text-gray-400 hover:text-green-400 transition-colors duration-300 hover:scale-110 transform"
           aria-label="LinkedIn"
         >
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -86,7 +85,7 @@ import { Image } from 'astro:assets';
             href={personalInfo.socialLinks.youtube} 
             target="_blank" 
             rel="noopener noreferrer"
-            class="text-gray-400 hover:text-primary-400 transition-colors duration-300 hover:scale-110 transform"
+            class="text-gray-400 hover:text-green-400 transition-colors duration-300 hover:scale-110 transform"
             aria-label="Twitter"
           >
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -98,8 +97,8 @@ import { Image } from 'astro:assets';
     </div>
 
     <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
-      <a href="#sobre-mi" class="text-primary-400 hover:text-primary-300 transition-colors">
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <a href="#sobre-mi" class="text-green-400 hover:text-green-300 transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
         </svg>
