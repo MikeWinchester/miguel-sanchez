@@ -3,7 +3,7 @@ import { personalInfo } from '@/data/personal';
 import { Image } from 'astro:assets';
 ---
 
-<section id="inicio" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-16">
+<section id="hero" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-16">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <div class="animate-on-scroll">
       <!-- Imagen de perfil optimizada con tamaños personalizables -->
@@ -15,7 +15,7 @@ import { Image } from 'astro:assets';
             alt={personalInfo.name}
             width={200}
             height={200}
-            class="w-full h-full object-cover rounded-full border-4 border-green-500 shadow-2xl shadow-green-500/20 hover:scale-105 transition-transform duration-300"
+            class="w-full h-full object-cover rounded-full border-4 border-green-500 shadow-2xl shadow-green-500/20"
             loading="eager"
             format="jpeg"
             quality={90}

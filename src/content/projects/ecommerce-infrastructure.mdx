@@ -1,79 +1,145 @@
 ---
-title: "E-commerce Platform"
+title: "Infraestructura de E-commerce con Terraform"
 description: "Una plataforma de comercio electrónico completa y moderna desarrollada con las últimas tecnologías web."
 slug: "ecommerce-infrastructure"
-date: 2022-12-31
-image: "placeholder.svg"
-technologies: 
-  - "React"
-  - "TypeScript"
-  - "TailwindCSS"
-  - "Node.js"
-  - "Express.js"
-  - "MongoDB"
-  - "Stripe API"
+date: 07/04/2025
+image: "/img/projects/ecommerce/ecommerce.jpg"
+technologies: ["Terraform", "Azure"]
 featured: true
-category: "Web Development"
-role: "Desarrollador Frontend"
+category: "Infraestructura"
+role: "Arquitecto de Software"
+---
+
+# Proyecto de Infraestructura como Código con Terraform
+
+## Objetivo del Proyecto
+
+Implementar una infraestructura escalable y segura en Azure utilizando **Terraform** bajo principios sólidos de arquitectura de software, permitiendo despliegues automatizados, separación clara de dominios y un alineamiento organizacional eficiente.
+
+## Estructura de Repositorios
+
+El proyecto se divide en tres repositorios, cada uno con una responsabilidad claramente definida:
+
+| Repositorio                | Enfoque Principal             | Equipos Responsables |
+| -------------------------- | ----------------------------- | -------------------- |
+| `INFRASCTRUCTURE-SECURITY` | Seguridad e Identidad         | Security & DevOps    |
+| `INFRASTRUCTURE-ANALYTICS` | Datos y Analítica             | Data Engineering     |
+| `CORE-APPLICATION`         | Lógica de negocio y servicios | Development & DevOps |
 
 ---
 
-## Descripción del Proyecto
+## Principios de Arquitectura Aplicados
 
-Diseñé e implementé una arquitectura escalable en Azure para una plataforma de comercio electrónico.
+### 1. Principio de Responsabilidad Única (SRP)
 
-## Características Principales
+Cada repositorio tiene una función bien delimitada:
 
-### Funcionalidades de E-commerce
-- Catálogo de productos con filtros avanzados
-- Carrito de compras persistente
-- Sistema de checkout seguro
-- Gestión de inventario en tiempo real
-- Sistema de reseñas y calificaciones
+* **Security & Identity**
 
-### Procesamiento de Pagos
-- Integración con Stripe para pagos seguros
-- Soporte para múltiples métodos de pago
-- Manejo de reembolsos y disputas
-- Facturación automática
+  * Configuración de Azure Entra ID, Key Vault, NSG y autenticación.
+  * Gestión de certificados, políticas y controles de acceso.
 
-### Gestión de Usuarios
-- Registro y autenticación de usuarios
-- Perfiles de usuario personalizables
-- Historial de pedidos
-- Lista de deseos
+* **Core Application**
 
-### Panel de Administración
-- Dashboard con métricas en tiempo real
-- Gestión de productos y categorías
-- Administración de pedidos
-- Reportes de ventas y analytics
+  * Despliegue de APIs, Azure Functions, Notification Hub y Front Door.
+  * Lógica de negocio y servicios de backoffice.
 
-## Tecnologías Utilizadas
+* **Data & Analytics**
 
-**Frontend:** React, TypeScript, TailwindCSS  
-**Backend:** Node.js, Express.js, JWT  
-**Base de Datos:** MongoDB con Mongoose  
-**Pagos:** Stripe API  
-**Deployment:** Vercel (Frontend), Railway (Backend)  
-**Testing:** Jest, React Testing Library  
+  * Gestión de almacenamiento, Synapse Analytics, backups y reporting.
+  * Canalización de datos (ETL) y compliance (GDPR/CCPA).
 
-## Desafíos Técnicos
+### 2. Acoplamiento Débil, Cohesión Alta
 
-### Optimización de Performance
-- Implementación de lazy loading para imágenes
-- Code splitting para reducir el bundle size
-- Caching estratégico con Redis
-- Optimización de consultas a la base de datos
+Las dependencias entre repositorios se minimizan; internamente, cada uno es altamente cohesivo. Por ejemplo:
 
-### Escalabilidad
-- Arquitectura modular y componentes reutilizables
-- API RESTful bien estructurada
-- Manejo eficiente del estado con Context API
-- Implementación de paginación y filtros optimizados
+![Repository 1](/img/projects/ecommerce/repository-1.jpeg)
+![Repository 2](/img/projects/ecommerce/repository-2.jpeg)
+![Repository 3](/img/projects/ecommerce/repository-3.jpeg)
+![Repository 4](/img/projects/ecommerce/repository-4.jpeg)
 
-## Resultados
-- **Performance:** Lighthouse score de 95+
-- **SEO:** Optimizado para motores de búsqueda
-- **Accesibilidad:** Cumple con estándares WCAG 2.1
-- **Responsive:** Funciona perfectamente en todos los dispositivos
+---
+
+## Gestión de Ciclos de Vida
+
+| Repositorio         | Frecuencia de Cambio | Nivel de Criticidad | Proceso                                                    |
+| ------------------- | -------------------- | ------------------- | ---------------------------------------------------------- |
+| Security & Identity | Mensual/Trimestral   | Alta                | Revisiones rigurosas, testing manual, coordinación DNS/SSL |
+| Core Application    | Diaria/Semanal       | Media-Alta          | CI/CD, testing automatizado, despliegue continuo           |
+| Data & Analytics    | Semanal/Mensual      | Variable            | Validación de datos, backups, mantenimientos programados   |
+
+---
+
+## Separación de Equipos y Competencias
+
+La estructura refleja cómo trabajan los equipos en el mundo real:
+
+* **Security Team** → Gestiona todo lo relacionado con Key Vault, acceso y políticas.
+* **Dev Team** → Controla el despliegue de microservicios y APIs.
+* **Data Team** → Diseña y mantiene pipelines, bases de datos y reportes.
+
+---
+
+## Gestión de Dependencias
+
+Orden jerárquico de despliegue:
+
+```
+1. Security & Identity
+    ↳ Proporciona identidades, secretos y reglas de red
+2. Core Application
+    ↳ Depende de seguridad y produce datos para análisis
+3. Data & Analytics
+    ↳ Consume datos y requiere acceso a recursos previos
+```
+![Diagram 1](/img/projects/ecommerce/diagram-1.jpeg)
+![Diagram 2](/img/projects/ecommerce/diagram-2.jpeg)
+![Diagram 3](/img/projects/ecommerce/diagram-3.jpeg)
+
+---
+
+## Seguridad, Compliance y Acceso
+
+* **Datos Sensibles**: Se aíslan en un repositorio con políticas de retención, cifrado en tránsito y reposo.
+* **Roles**: Acceso granular por dominio (Security, Dev, Data).
+* **Auditoría**: Trazabilidad clara por repositorio para facilitar inspecciones.
+
+---
+
+## Escalabilidad y Mantenibilidad
+
+* **Organizacional**:
+
+  * Equipos independientes, menor fricción.
+  * Mejora el onboarding y el ownership.
+
+* **Técnica**:
+
+  * Despliegues independientes por capa.
+  * Optimización individual sin riesgo a otras partes.
+
+---
+
+## Disaster Recovery Plan
+
+| Repositorio         | RTO / RPO             | Justificación                     |
+| ------------------- | --------------------- | --------------------------------- |
+| Security & Identity | RTO < 30 min, RPO = 0 | Impacto total; backups regionales |
+| Core Application    | RTO < 2h, RPO < 15min | Impacta usuario final directo     |
+| Data & Analytics    | RTO < 4h, RPO < 1h    | Persistencia de datos crítica     |
+
+---
+
+## Enlaces Relevantes
+
+* 🔗 [Repositorio: Security & Identity](https://github.com/MikeWinchester/infrastructure-security)
+* 🔗 [Repositorio: Core Application](https://github.com/ricjpg/app-infrastructure)
+* 🔗 [Repositorio: Data & Analytics](https://github.com/MikeWinchester/infrastructure-analytics)
+
+## Conclusión
+
+Esta solución muestra un enfoque maduro y empresarial hacia la infraestructura como código, aplicando principios sólidos, control de acceso riguroso, separación de responsabilidades y capacidad de escalar en equipos y tecnología.
+
+El resultado: una plataforma **modular, segura y resiliente**.
+
+---

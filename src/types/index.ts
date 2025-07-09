@@ -21,6 +21,7 @@ export interface Project {
   featured: boolean
   slug: string
   category: string
+  role: string
 }
 
 export interface Skill {

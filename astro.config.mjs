@@ -1,7 +1,8 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import tailwind from '@tailwindcss/vite';
+import typography from '@tailwindcss/typography';
 
 export default defineConfig({
   vite: {
@@ -9,7 +10,9 @@ export default defineConfig({
   },
   integrations: [
     tailwind({
-      applyBaseStyles: true,
+      config:{
+        plugins: [typography]
+      }
     }),
     mdx(),
     sitemap()
@@ -19,6 +22,7 @@ export default defineConfig({
     shikiConfig: {
       theme: 'github-dark',
       wrap: true
-    }
+    },
+    site: "https://miguel-sanchez.pages.dev"
   }
 });

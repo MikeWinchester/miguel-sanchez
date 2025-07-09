@@ -1,6 +1,5 @@
 ---
 import ProjectCard from './ProjectCard.astro';
-
 import { personalInfo } from '@/data/personal';
 import type { Project } from '@/types';
 
@@ -14,7 +13,7 @@ const featuredProjects = projects.filter(project => project.featured);
 const otherProjects = projects.filter(project => !project.featured);
 ---
 
-<section id="proyectos" class="py-20 bg-slate-900">
+<section id="projects" class="py-20 bg-slate-900">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="animate-on-scroll">
       <div class="text-center mb-16">
