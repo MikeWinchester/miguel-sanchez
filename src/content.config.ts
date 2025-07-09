@@ -26,4 +26,3 @@ const projects = defineCollection({
     slug: z.string(),
   }),
 });
-
