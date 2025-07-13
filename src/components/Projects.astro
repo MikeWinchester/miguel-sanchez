@@ -4,13 +4,21 @@ import { personalInfo } from '@/data/personal';
 import type { Project } from '@/types';
 
 const projectFiles: Record<string, { frontmatter: Project }> = import.meta.glob('../content/projects/*.mdx', { eager: true });
+
 const projects = Object.values(projectFiles).map((module) => ({
   ...module.frontmatter,
   id: module.frontmatter.slug || module.frontmatter.title.toLowerCase().replace(/\s+/g, '-')
 }));
 
-const featuredProjects = projects.filter(project => project.featured);
-const otherProjects = projects.filter(project => !project.featured);
+// Ordenar proyectos por fecha más reciente
+const sortedProjects = projects.sort((a, b) => {
+  const dateA = new Date(a.date).getTime();
+  const dateB = new Date(b.date).getTime();
+  return dateB - dateA; // Orden descendente (más reciente primero)
+});
+
+const featuredProjects = sortedProjects.filter(project => project.featured);
+const otherProjects = sortedProjects.filter(project => !project.featured);
 ---
 
 <section id="projects" class="py-20 bg-slate-900">
@@ -30,10 +38,40 @@ const otherProjects = projects.filter(project => !project.featured);
       {featuredProjects.length > 0 && (
         <div class="mb-16">
           <h3 class="text-2xl font-bold text-white mb-8">Proyectos Destacados</h3>
-          <div class="grid md:grid-cols-2 gap-8">
-            {featuredProjects.map((project) => (
-              <ProjectCard project={project} />
-            ))}
+          <div class="relative">
+            <div class="carousel-container" data-carousel="featured">
+              <div class="carousel-track flex transition-transform duration-500 ease-in-out">
+                {featuredProjects.map((project) => (
+                  <div class="carousel-item flex-shrink-0 w-full md:w-1/2 px-4">
+                    <ProjectCard project={project} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <!-- Botones de navegación -->
+            {featuredProjects.length > 1 && (
+              <>
+                <button 
+                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  data-carousel-target="featured"
+                  data-direction="prev"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+                <button 
+                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  data-carousel-target="featured"
+                  data-direction="next"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -42,10 +80,40 @@ const otherProjects = projects.filter(project => !project.featured);
       {otherProjects.length > 0 && (
         <div class="mb-16">
           <h3 class="text-2xl font-bold text-white mb-8">Otros Proyectos</h3>
-          <div class="grid md:grid-cols-2 gap-8">
-            {otherProjects.map((project) => (
-              <ProjectCard project={project} />
-            ))}
+          <div class="relative">
+            <div class="carousel-container" data-carousel="others">
+              <div class="carousel-track flex transition-transform duration-500 ease-in-out">
+                {otherProjects.map((project) => (
+                  <div class="carousel-item flex-shrink-0 w-full md:w-1/2 px-4">
+                    <ProjectCard project={project} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <!-- Botones de navegación -->
+            {otherProjects.length > 1 && (
+              <>
+                <button 
+                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  data-carousel-target="others"
+                  data-direction="prev"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+                <button 
+                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  data-carousel-target="others"
+                  data-direction="next"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -67,3 +135,398 @@ const otherProjects = projects.filter(project => !project.featured);
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Configuración del carrusel
+    const carousels = document.querySelectorAll('[data-carousel]');
+    
+    carousels.forEach(carousel => {
+      const carouselId = carousel.getAttribute('data-carousel');
+      const track = carousel.querySelector('.carousel-track') as HTMLElement;
+      const items = carousel.querySelectorAll('.carousel-item');
+      const prevBtn = document.querySelector(`[data-carousel-target="${carouselId}"][data-direction="prev"]`) as HTMLButtonElement;
+      const nextBtn = document.querySelector(`[data-carousel-target="${carouselId}"][data-direction="next"]`) as HTMLButtonElement;
+      
+      // Verificar que los elementos existen
+      if (!track || !carouselId || items.length === 0) return;
+      
+      let currentIndex = 0;
+      const totalItems = items.length;
+      let isTransitioning = false;
+      
+      // Variables para el scroll en móvil
+      let isScrolling = false;
+      let startX = 0;
+      let startTime = 0;
+      let velocity = 0;
+      let touchStartX = 0;
+      let touchStartTime = 0;
+      let isDragging = false;
+      
+      // Función para determinar si estamos en móvil
+      function isMobile() {
+        return window.innerWidth < 768;
+      }
+      
+      // Crear elementos clonados para el efecto infinito (solo desktop)
+      function createInfiniteLoop() {
+        if (isMobile()) return;
+        
+        // Crear múltiples clones para evitar espacios en blanco
+        const clones = [];
+        
+        // Clonar todos los elementos al final
+        for (let i = 0; i < totalItems; i++) {
+          const clone = items[i].cloneNode(true) as HTMLElement;
+          clone.classList.add('clone');
+          clones.push(clone);
+          track.appendChild(clone);
+        }
+        
+        // Clonar todos los elementos al inicio
+        for (let i = totalItems - 1; i >= 0; i--) {
+          const clone = items[i].cloneNode(true) as HTMLElement;
+          clone.classList.add('clone');
+          track.insertBefore(clone, track.firstChild);
+        }
+        
+        // Ajustar posición inicial para compensar los clones al inicio
+        currentIndex = totalItems;
+        updateCarousel(false);
+      }
+      
+      // Función para calcular el desplazamiento
+      function getTranslateX() {
+        if (isMobile()) {
+          return -(currentIndex * 100);
+        } else {
+          return -(currentIndex * 50);
+        }
+      }
+      
+      // Función para actualizar la posición del carrusel
+      function updateCarousel(animate = true) {
+        const translateX = getTranslateX();
+        
+        if (animate) {
+          track.style.transition = 'transform 0.5s ease-in-out';
+        } else {
+          track.style.transition = 'none';
+        }
+        
+        track.style.transform = `translateX(${translateX}%)`;
+      }
+      
+      // Función para ir al siguiente elemento
+      function nextSlide() {
+        if (isTransitioning || isMobile()) return;
+        
+        isTransitioning = true;
+        currentIndex++;
+        updateCarousel(true);
+      }
+      
+      // Función para ir al elemento anterior
+      function prevSlide() {
+        if (isTransitioning || isMobile()) return;
+        
+        isTransitioning = true;
+        currentIndex--;
+        updateCarousel(true);
+      }
+      
+      // Función para ir a un slide específico (móvil)
+      function goToSlide(index: number, animate = true) {
+        if (index < 0 || index >= totalItems) return;
+        
+        currentIndex = index;
+        updateCarousel(animate);
+      }
+      
+      // Función para manejar el final de la transición (desktop)
+      function handleTransitionEnd() {
+        if (isMobile() || !isTransitioning) return;
+        
+        isTransitioning = false;
+        
+        // Si estamos en los clones del final
+        if (currentIndex >= totalItems * 2) {
+          currentIndex = totalItems;
+          updateCarousel(false);
+        }
+        // Si estamos en los clones del inicio
+        else if (currentIndex < totalItems) {
+          currentIndex = totalItems * 2 - 1;
+          updateCarousel(false);
+        }
+      }
+      
+      // Event listeners para los botones (solo desktop)
+      if (nextBtn) {
+        nextBtn.addEventListener('click', nextSlide);
+      }
+      
+      if (prevBtn) {
+        prevBtn.addEventListener('click', prevSlide);
+      }
+      
+      // Event listener para el final de la transición
+      track.addEventListener('transitionend', handleTransitionEnd);
+      
+      // MANEJO DE TOUCH EVENTS PARA MÓVIL
+      const carouselElement = carousel as HTMLElement;
+      
+      // Touch start
+      carouselElement.addEventListener('touchstart', (e: TouchEvent) => {
+        if (!isMobile()) return;
+        
+        isDragging = true;
+        touchStartX = e.touches[0].pageX;
+        touchStartTime = Date.now();
+        velocity = 0;
+        
+        // Detener cualquier transición
+        track.style.transition = 'none';
+      }, { passive: true });
+      
+      // Touch move
+      carouselElement.addEventListener('touchmove', (e: TouchEvent) => {
+        if (!isMobile() || !isDragging) return;
+        
+        const touchCurrentX = e.touches[0].pageX;
+        const touchCurrentTime = Date.now();
+        const deltaX = touchCurrentX - touchStartX;
+        const deltaTime = touchCurrentTime - touchStartTime;
+        
+        // Calcular velocidad
+        if (deltaTime > 0) {
+          velocity = deltaX / deltaTime;
+        }
+        
+        // Aplicar resistencia en los extremos
+        let resistance = 1;
+        if (currentIndex === 0 && deltaX > 0) {
+          resistance = 0.3; // Resistencia al arrastrar hacia la derecha en el primer item
+        } else if (currentIndex === totalItems - 1 && deltaX < 0) {
+          resistance = 0.3; // Resistencia al arrastrar hacia la izquierda en el último item
+        }
+        
+        // Calcular posición temporal
+        const currentTransform = getTranslateX();
+        const dragOffset = (deltaX / carouselElement.offsetWidth) * 100 * resistance;
+        
+        track.style.transform = `translateX(${currentTransform + dragOffset}%)`;
+        
+        // Actualizar referencias
+        touchStartX = touchCurrentX;
+        touchStartTime = touchCurrentTime;
+      }, { passive: true });
+      
+      // Touch end
+      carouselElement.addEventListener('touchend', (e: TouchEvent) => {
+        if (!isMobile() || !isDragging) return;
+        
+        isDragging = false;
+        
+        const touchEndX = e.changedTouches[0].pageX;
+        const totalDelta = touchEndX - touchStartX;
+        const threshold = carouselElement.offsetWidth * 0.2; // 20% del ancho como umbral
+        
+        // Determinar dirección basada en la distancia y velocidad
+        let shouldChangeSlide = false;
+        let direction = 0;
+        
+        if (Math.abs(totalDelta) > threshold || Math.abs(velocity) > 0.3) {
+          shouldChangeSlide = true;
+          direction = totalDelta > 0 ? -1 : 1; // Invertido porque el drag es opuesto al movimiento
+        }
+        
+        if (shouldChangeSlide) {
+          let newIndex = currentIndex + direction;
+          
+          // Manejo del scroll infinito en móvil
+          if (newIndex < 0) {
+            newIndex = totalItems - 1; // Ir al último desde el primero
+          } else if (newIndex >= totalItems) {
+            newIndex = 0; // Ir al primero desde el último
+          }
+          
+          goToSlide(newIndex, true);
+        } else {
+          // Volver a la posición original
+          updateCarousel(true);
+        }
+      }, { passive: true });
+      
+      // Prevenir scroll vertical mientras se arrastra horizontalmente
+      carouselElement.addEventListener('touchmove', (e: TouchEvent) => {
+        if (!isMobile() || !isDragging) return;
+        
+        const touchCurrentX = e.touches[0].pageX;
+        const touchCurrentY = e.touches[0].pageY;
+        const deltaX = Math.abs(touchCurrentX - touchStartX);
+        const deltaY = Math.abs(touchCurrentY - (e.touches[0].pageY));
+        
+        // Solo prevenir scroll vertical si el movimiento es más horizontal que vertical
+        if (deltaX > deltaY) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+      
+      // MANEJO DE MOUSE EVENTS PARA DESKTOP
+      carouselElement.addEventListener('mousedown', (e: MouseEvent) => {
+        if (isMobile()) return;
+        
+        isScrolling = true;
+        startX = e.pageX;
+        const initialScrollLeft = carouselElement.scrollLeft;
+        carouselElement.style.cursor = 'grabbing';
+        
+        function handleMouseMove(moveEvent: MouseEvent) {
+          if (!isScrolling) return;
+          
+          moveEvent.preventDefault();
+          const x = moveEvent.pageX;
+          const walk = (x - startX) * 2;
+          carouselElement.scrollLeft = initialScrollLeft - walk;
+        }
+        
+        function handleMouseUp() {
+          isScrolling = false;
+          carouselElement.style.cursor = 'grab';
+          carouselElement.removeEventListener('mousemove', handleMouseMove);
+          carouselElement.removeEventListener('mouseup', handleMouseUp);
+          carouselElement.removeEventListener('mouseleave', handleMouseUp);
+        }
+        
+        carouselElement.addEventListener('mousemove', handleMouseMove);
+        carouselElement.addEventListener('mouseup', handleMouseUp);
+        carouselElement.addEventListener('mouseleave', handleMouseUp);
+      });
+      
+      // Manejar cambios de tamaño de ventana
+      window.addEventListener('resize', () => {
+        // Limpiar clones si cambiamos de desktop a móvil
+        if (isMobile()) {
+          const clones = track.querySelectorAll('.clone');
+          clones.forEach(clone => clone.remove());
+          currentIndex = Math.min(currentIndex, totalItems - 1);
+        } else if (totalItems > 1) {
+          // Recrear clones si cambiamos de móvil a desktop
+          const clones = track.querySelectorAll('.clone');
+          if (clones.length === 0) {
+            createInfiniteLoop();
+          }
+        }
+        
+        updateCarousel(false);
+      });
+      
+      // Inicializar carrusel
+      if (totalItems > 1) {
+        if (!isMobile()) {
+          createInfiniteLoop();
+        } else {
+          updateCarousel(false);
+        }
+      } else {
+        updateCarousel(false);
+      }
+    });
+  });
+</script>
+
+<style>
+  .carousel-container {
+    position: relative;
+    cursor: grab;
+  }
+  
+  .carousel-container:active {
+    cursor: grabbing;
+  }
+  
+  .carousel-track {
+    display: flex;
+    will-change: transform;
+  }
+  
+  .carousel-item {
+    flex-shrink: 0;
+    user-select: none;
+  }
+  
+  .carousel-item.clone {
+    pointer-events: none;
+  }
+  
+  /* Estilos específicos para móvil */
+  @media (max-width: 767px) {
+    .carousel-container {
+      overflow: hidden;
+      touch-action: pan-y; /* Permitir scroll vertical pero manejar horizontal manualmente */
+    }
+    
+    .carousel-track {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .carousel-item {
+      width: 100%;
+      padding: 0 1rem;
+    }
+    
+    /* Indicadores visuales suaves */
+    .carousel-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(to left, rgba(15, 23, 42, 0.8), transparent);
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.6;
+    }
+    
+    .carousel-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(to right, rgba(15, 23, 42, 0.8), transparent);
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.6;
+    }
+  }
+  
+  /* Estilos específicos para desktop */
+  @media (min-width: 768px) {
+    .carousel-container {
+      overflow: hidden;
+    }
+    
+    .carousel-track {
+      transition: transform 0.5s ease-in-out;
+    }
+    
+    .carousel-item {
+      width: 50%;
+      padding: 0 1rem;
+    }
+  }
+  
+  .carousel-btn {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .carousel-btn:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+</style>
