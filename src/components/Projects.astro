@@ -53,7 +53,7 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
             {featuredProjects.length > 1 && (
               <>
                 <button 
-                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
                   data-carousel-target="featured"
                   data-direction="prev"
                 >
@@ -62,7 +62,7 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
                   </svg>
                 </button>
                 <button 
-                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
                   data-carousel-target="featured"
                   data-direction="next"
                 >
@@ -95,7 +95,7 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
             {otherProjects.length > 1 && (
               <>
                 <button 
-                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
                   data-carousel-target="others"
                   data-direction="prev"
                 >
@@ -104,7 +104,7 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
                   </svg>
                 </button>
                 <button 
-                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10 hidden md:block"
+                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
                   data-carousel-target="others"
                   data-direction="next"
                 >
@@ -155,24 +155,8 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
       const totalItems = items.length;
       let isTransitioning = false;
       
-      // Variables para el scroll en móvil
-      let isScrolling = false;
-      let startX = 0;
-      let startTime = 0;
-      let velocity = 0;
-      let touchStartX = 0;
-      let touchStartTime = 0;
-      let isDragging = false;
-      
-      // Función para determinar si estamos en móvil
-      function isMobile() {
-        return window.innerWidth < 768;
-      }
-      
-      // Crear elementos clonados para el efecto infinito (solo desktop)
+      // Crear elementos clonados para el efecto infinito
       function createInfiniteLoop() {
-        if (isMobile()) return;
-        
         // Crear múltiples clones para evitar espacios en blanco
         const clones = [];
         
@@ -198,10 +182,11 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
       
       // Función para calcular el desplazamiento
       function getTranslateX() {
-        if (isMobile()) {
-          return -(currentIndex * 100);
-        } else {
+        const isDesktop = window.innerWidth >= 768;
+        if (isDesktop) {
           return -(currentIndex * 50);
+        } else {
+          return -(currentIndex * 100);
         }
       }
       
@@ -218,9 +203,27 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
         track.style.transform = `translateX(${translateX}%)`;
       }
       
+      // Función para manejar el final de la transición
+      function handleTransitionEnd() {
+        if (isTransitioning) {
+          isTransitioning = false;
+          
+          // Si estamos en los clones del final
+          if (currentIndex >= totalItems * 2) {
+            currentIndex = totalItems;
+            updateCarousel(false);
+          }
+          // Si estamos en los clones del inicio
+          else if (currentIndex < totalItems) {
+            currentIndex = totalItems * 2 - 1;
+            updateCarousel(false);
+          }
+        }
+      }
+      
       // Función para ir al siguiente elemento
       function nextSlide() {
-        if (isTransitioning || isMobile()) return;
+        if (isTransitioning) return;
         
         isTransitioning = true;
         currentIndex++;
@@ -229,40 +232,14 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
       
       // Función para ir al elemento anterior
       function prevSlide() {
-        if (isTransitioning || isMobile()) return;
+        if (isTransitioning) return;
         
         isTransitioning = true;
         currentIndex--;
         updateCarousel(true);
       }
       
-      // Función para ir a un slide específico (móvil)
-      function goToSlide(index: number, animate = true) {
-        if (index < 0 || index >= totalItems) return;
-        
-        currentIndex = index;
-        updateCarousel(animate);
-      }
-      
-      // Función para manejar el final de la transición (desktop)
-      function handleTransitionEnd() {
-        if (isMobile() || !isTransitioning) return;
-        
-        isTransitioning = false;
-        
-        // Si estamos en los clones del final
-        if (currentIndex >= totalItems * 2) {
-          currentIndex = totalItems;
-          updateCarousel(false);
-        }
-        // Si estamos en los clones del inicio
-        else if (currentIndex < totalItems) {
-          currentIndex = totalItems * 2 - 1;
-          updateCarousel(false);
-        }
-      }
-      
-      // Event listeners para los botones (solo desktop)
+      // Event listeners para los botones
       if (nextBtn) {
         nextBtn.addEventListener('click', nextSlide);
       }
@@ -274,109 +251,81 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
       // Event listener para el final de la transición
       track.addEventListener('transitionend', handleTransitionEnd);
       
-      // MANEJO DE TOUCH EVENTS PARA MÓVIL
+      // Soporte para scroll horizontal en móvil con snap
       const carouselElement = carousel as HTMLElement;
+      let isScrolling = false;
+      let startX = 0;
+      let startTime = 0;
+      let velocity = 0;
       
-      // Touch start
+      // Touch events para móvil
       carouselElement.addEventListener('touchstart', (e: TouchEvent) => {
-        if (!isMobile()) return;
+        const isMobile = window.innerWidth < 768;
+        if (!isMobile) return;
         
-        isDragging = true;
-        touchStartX = e.touches[0].pageX;
-        touchStartTime = Date.now();
+        isScrolling = true;
+        startX = e.touches[0].pageX;
+        startTime = Date.now();
         velocity = 0;
         
-        // Detener cualquier transición
-        track.style.transition = 'none';
-      }, { passive: true });
+        // Detener cualquier animación de snap en curso
+        carouselElement.style.scrollBehavior = 'auto';
+      });
       
-      // Touch move
       carouselElement.addEventListener('touchmove', (e: TouchEvent) => {
-        if (!isMobile() || !isDragging) return;
+        const isMobile = window.innerWidth < 768;
+        if (!isMobile || !isScrolling) return;
         
-        const touchCurrentX = e.touches[0].pageX;
-        const touchCurrentTime = Date.now();
-        const deltaX = touchCurrentX - touchStartX;
-        const deltaTime = touchCurrentTime - touchStartTime;
+        e.preventDefault();
+        const currentX = e.touches[0].pageX;
+        const currentTime = Date.now();
+        const deltaX = currentX - startX;
+        const deltaTime = currentTime - startTime;
         
         // Calcular velocidad
         if (deltaTime > 0) {
           velocity = deltaX / deltaTime;
         }
         
-        // Aplicar resistencia en los extremos
-        let resistance = 1;
-        if (currentIndex === 0 && deltaX > 0) {
-          resistance = 0.3; // Resistencia al arrastrar hacia la derecha en el primer item
-        } else if (currentIndex === totalItems - 1 && deltaX < 0) {
-          resistance = 0.3; // Resistencia al arrastrar hacia la izquierda en el último item
-        }
+        // Mover el carrusel
+        const walk = deltaX * 2;
+        carouselElement.scrollLeft = carouselElement.scrollLeft - walk;
         
-        // Calcular posición temporal
-        const currentTransform = getTranslateX();
-        const dragOffset = (deltaX / carouselElement.offsetWidth) * 100 * resistance;
-        
-        track.style.transform = `translateX(${currentTransform + dragOffset}%)`;
-        
-        // Actualizar referencias
-        touchStartX = touchCurrentX;
-        touchStartTime = touchCurrentTime;
-      }, { passive: true });
+        // Actualizar valores de referencia
+        startX = currentX;
+        startTime = currentTime;
+      });
       
-      // Touch end
-      carouselElement.addEventListener('touchend', (e: TouchEvent) => {
-        if (!isMobile() || !isDragging) return;
+      carouselElement.addEventListener('touchend', () => {
+        const isMobile = window.innerWidth < 768;
+        if (!isMobile || !isScrolling) return;
         
-        isDragging = false;
+        isScrolling = false;
         
-        const touchEndX = e.changedTouches[0].pageX;
-        const totalDelta = touchEndX - touchStartX;
-        const threshold = carouselElement.offsetWidth * 0.2; // 20% del ancho como umbral
+        // Calcular la posición de snap más cercana
+        const itemWidth = carouselElement.scrollWidth / (totalItems * 3); // 3 porque tenemos original + 2 sets de clones
+        const currentScroll = carouselElement.scrollLeft;
+        const momentum = velocity * 100; // Aplicar momentum basado en velocidad
+        const targetScroll = currentScroll + momentum;
         
-        // Determinar dirección basada en la distancia y velocidad
-        let shouldChangeSlide = false;
-        let direction = 0;
+        // Encontrar el item más cercano
+        const nearestItem = Math.round(targetScroll / itemWidth);
+        const snapPosition = nearestItem * itemWidth;
         
-        if (Math.abs(totalDelta) > threshold || Math.abs(velocity) > 0.3) {
-          shouldChangeSlide = true;
-          direction = totalDelta > 0 ? -1 : 1; // Invertido porque el drag es opuesto al movimiento
-        }
+        // Aplicar smooth scroll al snap
+        carouselElement.style.scrollBehavior = 'smooth';
+        carouselElement.scrollLeft = snapPosition;
         
-        if (shouldChangeSlide) {
-          let newIndex = currentIndex + direction;
-          
-          // Manejo del scroll infinito en móvil
-          if (newIndex < 0) {
-            newIndex = totalItems - 1; // Ir al último desde el primero
-          } else if (newIndex >= totalItems) {
-            newIndex = 0; // Ir al primero desde el último
-          }
-          
-          goToSlide(newIndex, true);
-        } else {
-          // Volver a la posición original
-          updateCarousel(true);
-        }
-      }, { passive: true });
+        // Resetear después de un tiempo
+        setTimeout(() => {
+          carouselElement.style.scrollBehavior = 'auto';
+        }, 500);
+      });
       
-      // Prevenir scroll vertical mientras se arrastra horizontalmente
-      carouselElement.addEventListener('touchmove', (e: TouchEvent) => {
-        if (!isMobile() || !isDragging) return;
-        
-        const touchCurrentX = e.touches[0].pageX;
-        const touchCurrentY = e.touches[0].pageY;
-        const deltaX = Math.abs(touchCurrentX - touchStartX);
-        const deltaY = Math.abs(touchCurrentY - (e.touches[0].pageY));
-        
-        // Solo prevenir scroll vertical si el movimiento es más horizontal que vertical
-        if (deltaX > deltaY) {
-          e.preventDefault();
-        }
-      }, { passive: false });
-      
-      // MANEJO DE MOUSE EVENTS PARA DESKTOP
+      // Mouse events para desktop - CORREGIDO
       carouselElement.addEventListener('mousedown', (e: MouseEvent) => {
-        if (isMobile()) return;
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) return;
         
         isScrolling = true;
         startX = e.pageX;
@@ -407,29 +356,12 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
       
       // Manejar cambios de tamaño de ventana
       window.addEventListener('resize', () => {
-        // Limpiar clones si cambiamos de desktop a móvil
-        if (isMobile()) {
-          const clones = track.querySelectorAll('.clone');
-          clones.forEach(clone => clone.remove());
-          currentIndex = Math.min(currentIndex, totalItems - 1);
-        } else if (totalItems > 1) {
-          // Recrear clones si cambiamos de móvil a desktop
-          const clones = track.querySelectorAll('.clone');
-          if (clones.length === 0) {
-            createInfiniteLoop();
-          }
-        }
-        
         updateCarousel(false);
       });
       
       // Inicializar carrusel
       if (totalItems > 1) {
-        if (!isMobile()) {
-          createInfiniteLoop();
-        } else {
-          updateCarousel(false);
-        }
+        createInfiniteLoop();
       } else {
         updateCarousel(false);
       }
@@ -439,6 +371,7 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
 
 <style>
   .carousel-container {
+    overflow: hidden;
     position: relative;
     cursor: grab;
   }
@@ -449,6 +382,7 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
   
   .carousel-track {
     display: flex;
+    transition: transform 0.5s ease-in-out;
     will-change: transform;
   }
   
@@ -461,63 +395,44 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
     pointer-events: none;
   }
   
-  /* Estilos específicos para móvil */
+  /* En móvil cada item ocupa el 100% del ancho */
   @media (max-width: 767px) {
-    .carousel-container {
-      overflow: hidden;
-      touch-action: pan-y; /* Permitir scroll vertical pero manejar horizontal manualmente */
-    }
-    
-    .carousel-track {
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
     .carousel-item {
       width: 100%;
       padding: 0 1rem;
     }
     
-    /* Indicadores visuales suaves */
-    .carousel-container::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 20px;
-      height: 100%;
-      background: linear-gradient(to left, rgba(15, 23, 42, 0.8), transparent);
-      pointer-events: none;
-      z-index: 5;
-      opacity: 0.6;
-    }
-    
-    .carousel-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 20px;
-      height: 100%;
-      background: linear-gradient(to right, rgba(15, 23, 42, 0.8), transparent);
-      pointer-events: none;
-      z-index: 5;
-      opacity: 0.6;
-    }
-  }
-  
-  /* Estilos específicos para desktop */
-  @media (min-width: 768px) {
     .carousel-container {
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      /* Ocultar scrollbar completamente */
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
     }
     
-    .carousel-track {
-      transition: transform 0.5s ease-in-out;
+    .carousel-container::-webkit-scrollbar {
+      display: none; /* Safari y Chrome */
+    }
+    
+    /* Scroll snap para mejor UX */
+    .carousel-container {
+      scroll-snap-type: x mandatory;
     }
     
     .carousel-item {
+      scroll-snap-align: start;
+    }
+  }
+  
+  /* En desktop cada item ocupa el 50% del ancho */
+  @media (min-width: 768px) {
+    .carousel-item {
       width: 50%;
       padding: 0 1rem;
+    }
+    
+    .carousel-container {
+      overflow: hidden;
     }
   }
   
@@ -528,5 +443,39 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
   
   .carousel-btn:hover {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Animación suave para el scroll */
+  @media (max-width: 767px) {
+    .carousel-track {
+      transition: none;
+    }
+  }
+  
+  /* Indicador visual de que se puede hacer scroll */
+  @media (max-width: 767px) {
+    .carousel-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 30px;
+      height: 100%;
+      background: linear-gradient(to left, rgba(15, 23, 42, 0.9), transparent);
+      pointer-events: none;
+      z-index: 5;
+    }
+    
+    .carousel-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30px;
+      height: 100%;
+      background: linear-gradient(to right, rgba(15, 23, 42, 0.9), transparent);
+      pointer-events: none;
+      z-index: 5;
+    }
   }
 </style>
