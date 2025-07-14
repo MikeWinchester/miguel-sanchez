@@ -2,23 +2,13 @@
 import ProjectCard from './ProjectCard.astro';
 import { personalInfo } from '@/data/personal';
 import type { Project } from '@/types';
-
 const projectFiles: Record<string, { frontmatter: Project }> = import.meta.glob('../content/projects/*.mdx', { eager: true });
-
 const projects = Object.values(projectFiles).map((module) => ({
   ...module.frontmatter,
   id: module.frontmatter.slug || module.frontmatter.title.toLowerCase().replace(/\s+/g, '-')
 }));
-
-// Ordenar proyectos por fecha más reciente
-const sortedProjects = projects.sort((a, b) => {
-  const dateA = new Date(a.date).getTime();
-  const dateB = new Date(b.date).getTime();
-  return dateB - dateA; // Orden descendente (más reciente primero)
-});
-
-const featuredProjects = sortedProjects.filter(project => project.featured);
-const otherProjects = sortedProjects.filter(project => !project.featured);
+const featuredProjects = projects.filter(project => project.featured);
+const otherProjects = projects.filter(project => !project.featured);
 ---
 
 <section id="projects" class="py-20 bg-slate-900">
@@ -39,38 +29,36 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
         <div class="mb-16">
           <h3 class="text-2xl font-bold text-white mb-8">Proyectos Destacados</h3>
           <div class="relative">
-            <div class="carousel-container" data-carousel="featured">
-              <div class="carousel-track flex transition-transform duration-500 ease-in-out">
+            <div class="carousel-container overflow-hidden">
+              <div id="featured-carousel" class="carousel-track flex transition-transform duration-500 ease-in-out">
                 {featuredProjects.map((project) => (
-                  <div class="carousel-item flex-shrink-0 w-full md:w-1/2 px-4">
+                  <div class="carousel-item flex-shrink-0 w-1/2 px-4">
                     <ProjectCard project={project} />
                   </div>
                 ))}
               </div>
             </div>
-            
-            <!-- Botones de navegación -->
-            {featuredProjects.length > 1 && (
-              <>
+            {featuredProjects.length > 2 && (
+              <div class="flex justify-center mt-8 space-x-4">
                 <button 
-                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
-                  data-carousel-target="featured"
-                  data-direction="prev"
+                  id="featured-prev" 
+                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  aria-label="Proyecto anterior"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
                 <button 
-                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
-                  data-carousel-target="featured"
-                  data-direction="next"
+                  id="featured-next" 
+                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  aria-label="Siguiente proyecto"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -81,38 +69,36 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
         <div class="mb-16">
           <h3 class="text-2xl font-bold text-white mb-8">Otros Proyectos</h3>
           <div class="relative">
-            <div class="carousel-container" data-carousel="others">
-              <div class="carousel-track flex transition-transform duration-500 ease-in-out">
+            <div class="carousel-container overflow-hidden">
+              <div id="other-carousel" class="carousel-track flex transition-transform duration-500 ease-in-out">
                 {otherProjects.map((project) => (
-                  <div class="carousel-item flex-shrink-0 w-full md:w-1/2 px-4">
+                  <div class="carousel-item flex-shrink-0 w-1/2 px-4">
                     <ProjectCard project={project} />
                   </div>
                 ))}
               </div>
             </div>
-            
-            <!-- Botones de navegación -->
-            {otherProjects.length > 1 && (
-              <>
+            {otherProjects.length > 2 && (
+              <div class="flex justify-center mt-8 space-x-4">
                 <button 
-                  class="carousel-btn carousel-btn-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
-                  data-carousel-target="others"
-                  data-direction="prev"
+                  id="other-prev" 
+                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  aria-label="Proyecto anterior"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
                 <button 
-                  class="carousel-btn carousel-btn-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg z-10"
-                  data-carousel-target="others"
-                  data-direction="next"
+                  id="other-next" 
+                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  aria-label="Siguiente proyecto"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -136,346 +122,192 @@ const otherProjects = sortedProjects.filter(project => !project.featured);
   </div>
 </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Configuración del carrusel
-    const carousels = document.querySelectorAll('[data-carousel]');
-    
-    carousels.forEach(carousel => {
-      const carouselId = carousel.getAttribute('data-carousel');
-      const track = carousel.querySelector('.carousel-track') as HTMLElement;
-      const items = carousel.querySelectorAll('.carousel-item');
-      const prevBtn = document.querySelector(`[data-carousel-target="${carouselId}"][data-direction="prev"]`) as HTMLButtonElement;
-      const nextBtn = document.querySelector(`[data-carousel-target="${carouselId}"][data-direction="next"]`) as HTMLButtonElement;
-      
-      // Verificar que los elementos existen
-      if (!track || !carouselId || items.length === 0) return;
-      
-      let currentIndex = 0;
-      const totalItems = items.length;
-      let isTransitioning = false;
-      
-      // Crear elementos clonados para el efecto infinito
-      function createInfiniteLoop() {
-        // Crear múltiples clones para evitar espacios en blanco
-        const clones = [];
-        
-        // Clonar todos los elementos al final
-        for (let i = 0; i < totalItems; i++) {
-          const clone = items[i].cloneNode(true) as HTMLElement;
-          clone.classList.add('clone');
-          clones.push(clone);
-          track.appendChild(clone);
-        }
-        
-        // Clonar todos los elementos al inicio
-        for (let i = totalItems - 1; i >= 0; i--) {
-          const clone = items[i].cloneNode(true) as HTMLElement;
-          clone.classList.add('clone');
-          track.insertBefore(clone, track.firstChild);
-        }
-        
-        // Ajustar posición inicial para compensar los clones al inicio
-        currentIndex = totalItems;
-        updateCarousel(false);
-      }
-      
-      // Función para calcular el desplazamiento
-      function getTranslateX() {
-        const isDesktop = window.innerWidth >= 768;
-        if (isDesktop) {
-          return -(currentIndex * 50);
-        } else {
-          return -(currentIndex * 100);
-        }
-      }
-      
-      // Función para actualizar la posición del carrusel
-      function updateCarousel(animate = true) {
-        const translateX = getTranslateX();
-        
-        if (animate) {
-          track.style.transition = 'transform 0.5s ease-in-out';
-        } else {
-          track.style.transition = 'none';
-        }
-        
-        track.style.transform = `translateX(${translateX}%)`;
-      }
-      
-      // Función para manejar el final de la transición
-      function handleTransitionEnd() {
-        if (isTransitioning) {
-          isTransitioning = false;
-          
-          // Si estamos en los clones del final
-          if (currentIndex >= totalItems * 2) {
-            currentIndex = totalItems;
-            updateCarousel(false);
-          }
-          // Si estamos en los clones del inicio
-          else if (currentIndex < totalItems) {
-            currentIndex = totalItems * 2 - 1;
-            updateCarousel(false);
-          }
-        }
-      }
-      
-      // Función para ir al siguiente elemento
-      function nextSlide() {
-        if (isTransitioning) return;
-        
-        isTransitioning = true;
-        currentIndex++;
-        updateCarousel(true);
-      }
-      
-      // Función para ir al elemento anterior
-      function prevSlide() {
-        if (isTransitioning) return;
-        
-        isTransitioning = true;
-        currentIndex--;
-        updateCarousel(true);
-      }
-      
-      // Event listeners para los botones
-      if (nextBtn) {
-        nextBtn.addEventListener('click', nextSlide);
-      }
-      
-      if (prevBtn) {
-        prevBtn.addEventListener('click', prevSlide);
-      }
-      
-      // Event listener para el final de la transición
-      track.addEventListener('transitionend', handleTransitionEnd);
-      
-      // Soporte para scroll horizontal en móvil con snap
-      const carouselElement = carousel as HTMLElement;
-      let isScrolling = false;
-      let startX = 0;
-      let startTime = 0;
-      let velocity = 0;
-      
-      // Touch events para móvil
-      carouselElement.addEventListener('touchstart', (e: TouchEvent) => {
-        const isMobile = window.innerWidth < 768;
-        if (!isMobile) return;
-        
-        isScrolling = true;
-        startX = e.touches[0].pageX;
-        startTime = Date.now();
-        velocity = 0;
-        
-        // Detener cualquier animación de snap en curso
-        carouselElement.style.scrollBehavior = 'auto';
-      });
-      
-      carouselElement.addEventListener('touchmove', (e: TouchEvent) => {
-        const isMobile = window.innerWidth < 768;
-        if (!isMobile || !isScrolling) return;
-        
-        e.preventDefault();
-        const currentX = e.touches[0].pageX;
-        const currentTime = Date.now();
-        const deltaX = currentX - startX;
-        const deltaTime = currentTime - startTime;
-        
-        // Calcular velocidad
-        if (deltaTime > 0) {
-          velocity = deltaX / deltaTime;
-        }
-        
-        // Mover el carrusel
-        const walk = deltaX * 2;
-        carouselElement.scrollLeft = carouselElement.scrollLeft - walk;
-        
-        // Actualizar valores de referencia
-        startX = currentX;
-        startTime = currentTime;
-      });
-      
-      carouselElement.addEventListener('touchend', () => {
-        const isMobile = window.innerWidth < 768;
-        if (!isMobile || !isScrolling) return;
-        
-        isScrolling = false;
-        
-        // Calcular la posición de snap más cercana
-        const itemWidth = carouselElement.scrollWidth / (totalItems * 3); // 3 porque tenemos original + 2 sets de clones
-        const currentScroll = carouselElement.scrollLeft;
-        const momentum = velocity * 100; // Aplicar momentum basado en velocidad
-        const targetScroll = currentScroll + momentum;
-        
-        // Encontrar el item más cercano
-        const nearestItem = Math.round(targetScroll / itemWidth);
-        const snapPosition = nearestItem * itemWidth;
-        
-        // Aplicar smooth scroll al snap
-        carouselElement.style.scrollBehavior = 'smooth';
-        carouselElement.scrollLeft = snapPosition;
-        
-        // Resetear después de un tiempo
-        setTimeout(() => {
-          carouselElement.style.scrollBehavior = 'auto';
-        }, 500);
-      });
-      
-      // Mouse events para desktop - CORREGIDO
-      carouselElement.addEventListener('mousedown', (e: MouseEvent) => {
-        const isMobile = window.innerWidth < 768;
-        if (isMobile) return;
-        
-        isScrolling = true;
-        startX = e.pageX;
-        const initialScrollLeft = carouselElement.scrollLeft;
-        carouselElement.style.cursor = 'grabbing';
-        
-        function handleMouseMove(moveEvent: MouseEvent) {
-          if (!isScrolling) return;
-          
-          moveEvent.preventDefault();
-          const x = moveEvent.pageX;
-          const walk = (x - startX) * 2;
-          carouselElement.scrollLeft = initialScrollLeft - walk;
-        }
-        
-        function handleMouseUp() {
-          isScrolling = false;
-          carouselElement.style.cursor = 'grab';
-          carouselElement.removeEventListener('mousemove', handleMouseMove);
-          carouselElement.removeEventListener('mouseup', handleMouseUp);
-          carouselElement.removeEventListener('mouseleave', handleMouseUp);
-        }
-        
-        carouselElement.addEventListener('mousemove', handleMouseMove);
-        carouselElement.addEventListener('mouseup', handleMouseUp);
-        carouselElement.addEventListener('mouseleave', handleMouseUp);
-      });
-      
-      // Manejar cambios de tamaño de ventana
-      window.addEventListener('resize', () => {
-        updateCarousel(false);
-      });
-      
-      // Inicializar carrusel
-      if (totalItems > 1) {
-        createInfiniteLoop();
-      } else {
-        updateCarousel(false);
-      }
-    });
-  });
-</script>
-
 <style>
   .carousel-container {
-    overflow: hidden;
     position: relative;
-    cursor: grab;
-  }
-  
-  .carousel-container:active {
-    cursor: grabbing;
   }
   
   .carousel-track {
     display: flex;
     transition: transform 0.5s ease-in-out;
-    will-change: transform;
   }
   
   .carousel-item {
+    width: 50%;
     flex-shrink: 0;
-    user-select: none;
-  }
-  
-  .carousel-item.clone {
-    pointer-events: none;
-  }
-  
-  /* En móvil cada item ocupa el 100% del ancho */
-  @media (max-width: 767px) {
-    .carousel-item {
-      width: 100%;
-      padding: 0 1rem;
-    }
-    
-    .carousel-container {
-      overflow-x: auto;
-      overflow-y: hidden;
-      /* Ocultar scrollbar completamente */
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* Internet Explorer 10+ */
-    }
-    
-    .carousel-container::-webkit-scrollbar {
-      display: none; /* Safari y Chrome */
-    }
-    
-    /* Scroll snap para mejor UX */
-    .carousel-container {
-      scroll-snap-type: x mandatory;
-    }
-    
-    .carousel-item {
-      scroll-snap-align: start;
-    }
-  }
-  
-  /* En desktop cada item ocupa el 50% del ancho */
-  @media (min-width: 768px) {
-    .carousel-item {
-      width: 50%;
-      padding: 0 1rem;
-    }
-    
-    .carousel-container {
-      overflow: hidden;
-    }
+    padding: 0 1rem;
   }
   
   .carousel-btn {
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    opacity: 0.8;
+    transition: all 0.3s ease;
   }
   
   .carousel-btn:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    opacity: 1;
   }
   
-  /* Animación suave para el scroll */
-  @media (max-width: 767px) {
-    .carousel-track {
-      transition: none;
-    }
+  .carousel-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
   }
   
-  /* Indicador visual de que se puede hacer scroll */
-  @media (max-width: 767px) {
-    .carousel-container::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 30px;
-      height: 100%;
-      background: linear-gradient(to left, rgba(15, 23, 42, 0.9), transparent);
-      pointer-events: none;
-      z-index: 5;
-    }
-    
-    .carousel-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 30px;
-      height: 100%;
-      background: linear-gradient(to right, rgba(15, 23, 42, 0.9), transparent);
-      pointer-events: none;
-      z-index: 5;
+  @media (max-width: 768px) {
+    .carousel-item {
+      width: 100%;
+      padding: 0 0.5rem;
     }
   }
 </style>
+
+<script>
+  interface ProjectCounts {
+    featured: number;
+    other: number;
+  }
+
+  class ProjectCarousel {
+    private carousel: HTMLElement | null;
+    private prevBtn: HTMLElement | null;
+    private nextBtn: HTMLElement | null;
+    private projectCount: number;
+    private currentIndex: number;
+    private itemsPerView: number;
+    private resizeHandler: () => void;
+    private isTransitioning: boolean = false;
+    
+    constructor(carouselId: string, prevBtnId: string, nextBtnId: string, projectCount: number) {
+      this.carousel = document.getElementById(carouselId);
+      this.prevBtn = document.getElementById(prevBtnId);
+      this.nextBtn = document.getElementById(nextBtnId);
+      this.projectCount = projectCount;
+      this.currentIndex = 0;
+      this.itemsPerView = window.innerWidth >= 768 ? 2 : 1;
+      
+      // Bind del contexto para el event listener
+      this.resizeHandler = () => {
+        const newItemsPerView = window.innerWidth >= 768 ? 2 : 1;
+        if (newItemsPerView !== this.itemsPerView) {
+          this.itemsPerView = newItemsPerView;
+          this.updateCarousel();
+        }
+      };
+      
+      this.init();
+    }
+    
+    private init(): void {
+      if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
+      
+      // Crear elementos adicionales para navegación circular
+      this.createCircularItems();
+      
+      this.prevBtn.addEventListener('click', () => this.prev());
+      this.nextBtn.addEventListener('click', () => this.next());
+      
+      window.addEventListener('resize', this.resizeHandler);
+      
+      // Configurar el carrusel para empezar en la posición correcta
+      this.currentIndex = this.projectCount; // Empezar en el primer conjunto duplicado
+      this.updateCarousel(false); // Sin transición inicial
+      
+      // Escuchar el final de las transiciones
+      this.carousel.addEventListener('transitionend', () => this.handleTransitionEnd());
+    }
+    
+    private prev(): void {
+      if (this.isTransitioning) return;
+      
+      this.isTransitioning = true;
+      this.currentIndex--;
+      this.updateCarousel(true);
+    }
+    
+    private next(): void {
+      if (this.isTransitioning) return;
+      
+      this.isTransitioning = true;
+      this.currentIndex++;
+      this.updateCarousel(true);
+    }
+    
+    private updateCarousel(withTransition: boolean = true): void {
+      if (!this.carousel) return;
+      
+      const itemWidth = 100 / this.itemsPerView;
+      const translateX = -(this.currentIndex * itemWidth);
+      
+      // Habilitar o deshabilitar transición
+      this.carousel.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
+      this.carousel.style.transform = `translateX(${translateX}%)`;
+      
+      if (!withTransition) {
+        this.isTransitioning = false;
+      }
+    }
+    
+    private handleTransitionEnd(): void {
+      this.isTransitioning = false;
+      
+      // Reposicionar para efecto infinito
+      if (this.currentIndex >= this.projectCount * 2) {
+        // Si llegamos al final, volver al inicio de los elementos duplicados
+        this.currentIndex = this.projectCount;
+        this.updateCarousel(false);
+      } else if (this.currentIndex < this.projectCount) {
+        // Si llegamos al principio, ir al final de los elementos originales
+        this.currentIndex = this.projectCount * 2 - 1;
+        this.updateCarousel(false);
+      }
+    }
+    
+    private createCircularItems(): void {
+      if (!this.carousel) return;
+      
+      const originalItems = Array.from(this.carousel.children);
+      
+      // Crear elementos adicionales para navegación circular
+      // Agregar copias al final
+      originalItems.forEach(item => {
+        const clone = item.cloneNode(true) as HTMLElement;
+        this.carousel!.appendChild(clone);
+      });
+      
+      // Agregar copias al principio
+      for (let i = originalItems.length - 1; i >= 0; i--) {
+        const clone = originalItems[i].cloneNode(true) as HTMLElement;
+        this.carousel!.insertBefore(clone, this.carousel!.firstChild);
+      }
+    }
+    
+    public destroy(): void {
+      window.removeEventListener('resize', this.resizeHandler);
+    }
+  }
+  
+  // Función para obtener el número de proyectos de cada tipo
+  function getProjectCounts(): ProjectCounts {
+    const featuredItems = document.querySelectorAll('#featured-carousel .carousel-item');
+    const otherItems = document.querySelectorAll('#other-carousel .carousel-item');
+    
+    return {
+      featured: featuredItems.length,
+      other: otherItems.length
+    };
+  }
+  
+  // Inicializar carruseles cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', function(): void {
+    const counts = getProjectCounts();
+    
+    // Inicializar carrusel de proyectos destacados
+    if (counts.featured > 2) {
+      new ProjectCarousel('featured-carousel', 'featured-prev', 'featured-next', counts.featured);
+    }
+    
+    // Inicializar carrusel de otros proyectos
+    if (counts.other > 2) {
+      new ProjectCarousel('other-carousel', 'other-prev', 'other-next', counts.other);
+    }
+  });
+</script>
