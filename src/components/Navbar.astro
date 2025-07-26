@@ -1,33 +1,67 @@
 ---
+// src/components/Navigation.astro
 import { personalInfo } from '@/data/personal';
+
+interface NavItem {
+  href: string;
+  label: string;
+}
+
+const navigationItems: NavItem[] = [
+  { href: '#hero', label: 'Inicio' },
+  { href: '#about-me', label: 'Sobre mí' },
+  { href: '#experience', label: 'Experiencia' },
+  { href: '#skills', label: 'Habilidades' },
+  { href: '#projects', label: 'Proyectos' },
+  { href: '#contact', label: 'Contacto' }
+];
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900 border-b border-slate-700">
+<nav 
+  class="fixed top-0 left-0 right-0 z-50 bg-slate-900 border-b border-slate-700" 
+  aria-label="Navegación principal"
+>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
       <!-- Logo/Nombre -->
       <div class="flex-shrink-0">
-        <a href="#inicio" class="text-xl font-bold text-green-400 hover:text-green-300 transition-colors duration-300">
+        <a 
+          href="#inicio" 
+          class="text-xl font-bold text-green-400 hover:text-green-300 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded"
+          aria-label="Ir al inicio"
+        >
           {personalInfo.name}
         </a>
       </div>
 
       <!-- Menu Desktop -->
       <div class="hidden md:block">
-        <div class="ml-10 flex items-baseline space-x-8">
-          <a href="#hero" class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-green-400">Inicio</a>
-          <a href="#about-me" class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-green-400">Sobre mí</a>
-          <a href="#experience" class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-green-400">Experiencia</a>
-          <a href="#skills" class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-green-400">Habilidades</a>
-          <a href="#projects" class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-green-400">Proyectos</a>
-          <a href="#contact" class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-green-400">Contacto</a>
-        </div>
+        <ul class="ml-10 flex items-baseline space-x-8" role="menubar">
+          {navigationItems.map((item) => (
+            <li role="none">
+              <a
+                href={item.href}
+                class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:text-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                role="menuitem"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <!-- Menu Mobile Button -->
       <div class="md:hidden">
-        <button id="mobile-menu-button" class="text-gray-300 hover:text-green-400 focus:outline-none focus:text-green-400 transition-colors duration-300">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button 
+          id="mobile-menu-button"
+          aria-label="Menú de navegación"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          class="text-gray-300 hover:text-green-400 focus:outline-none focus:text-green-400 transition-colors duration-300 p-2 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+        >
+          <span class="sr-only">Abrir menú</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -36,16 +70,26 @@ import { personalInfo } from '@/data/personal';
   </div>
 
   <!-- Menu Mobile -->
-  <div id="mobile-menu" class="md:hidden hidden bg-slate-800 border-t border-slate-700">
-    <div class="px-2 pt-2 pb-3 space-y-1">
-      <a href="#hero" class="block text-gray-300 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 hover:text-green-400 hover:bg-slate-700">Inicio</a>
-      <a href="#about-me" class="block text-gray-300 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 hover:text-green-400 hover:bg-slate-700">Sobre mí</a>
-      <a href="#experience" class="block text-gray-300 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 hover:text-green-400 hover:bg-slate-700">Experiencia</a>
-      <a href="#skills" class="block text-gray-300 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 hover:text-green-400 hover:bg-slate-700">Habilidades</a>
-      <a href="#projects" class="block text-gray-300 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 hover:text-green-400 hover:bg-slate-700">Proyectos</a>
-      <a href="#contact" class="block text-gray-300 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 hover:text-green-400 hover:bg-slate-700">Contacto</a>
-    </div>
+  <div 
+    id="mobile-menu" 
+    class="md:hidden hidden bg-slate-800 border-t border-slate-700"
+    aria-hidden="true"
+  >
+    <ul class="px-2 pt-2 pb-3 space-y-1" role="menu">
+      {navigationItems.map((item) => (
+        <li role="none">
+          <a
+            href={item.href}
+            class="block text-gray-300 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 hover:text-green-400 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-700"
+            role="menuitem"
+            tabindex="-1"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
   </div>
 </nav>
 
-<script is:inline src="js/mobileMenu.js" defer></script>
+<script is:inline src="/js/mobileMenu.js"></script>

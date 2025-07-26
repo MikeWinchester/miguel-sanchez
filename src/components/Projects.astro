@@ -42,7 +42,7 @@ const otherProjects = projects.filter(project => !project.featured);
               <div class="flex justify-center mt-8 space-x-4">
                 <button 
                   id="featured-prev" 
-                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  class="carousel-btn bg-green-700 hover:bg-green-800 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25"
                   aria-label="Proyecto anterior"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@ const otherProjects = projects.filter(project => !project.featured);
                 </button>
                 <button 
                   id="featured-next" 
-                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  class="carousel-btn bg-green-700 hover:bg-green-800 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25"
                   aria-label="Siguiente proyecto"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@ const otherProjects = projects.filter(project => !project.featured);
               <div class="flex justify-center mt-8 space-x-4">
                 <button 
                   id="other-prev" 
-                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  class="carousel-btn bg-green-700 hover:bg-green-800 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25"
                   aria-label="Proyecto anterior"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +91,7 @@ const otherProjects = projects.filter(project => !project.featured);
                 </button>
                 <button 
                   id="other-next" 
-                  class="carousel-btn bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/25"
+                  class="carousel-btn bg-green-700 hover:bg-green-800 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25"
                   aria-label="Siguiente proyecto"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,13 +104,13 @@ const otherProjects = projects.filter(project => !project.featured);
         </div>
       )}
 
-      <!-- Enlace a GitHub -->
+      <!-- Enlace a GitHub (Corregido) -->
       <div class="text-center">
         <a 
           href={personalInfo.socialLinks.github} 
           target="_blank" 
           rel="noopener noreferrer"
-          class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/25"
+          class="inline-flex items-center bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25"
         >
           <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 30 24">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -122,192 +122,4 @@ const otherProjects = projects.filter(project => !project.featured);
   </div>
 </section>
 
-<style>
-  .carousel-container {
-    position: relative;
-  }
-  
-  .carousel-track {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-  }
-  
-  .carousel-item {
-    width: 50%;
-    flex-shrink: 0;
-    padding: 0 1rem;
-  }
-  
-  .carousel-btn {
-    opacity: 0.8;
-    transition: all 0.3s ease;
-  }
-  
-  .carousel-btn:hover {
-    opacity: 1;
-  }
-  
-  .carousel-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  
-  @media (max-width: 768px) {
-    .carousel-item {
-      width: 100%;
-      padding: 0 0.5rem;
-    }
-  }
-</style>
-
-<script>
-  interface ProjectCounts {
-    featured: number;
-    other: number;
-  }
-
-  class ProjectCarousel {
-    private carousel: HTMLElement | null;
-    private prevBtn: HTMLElement | null;
-    private nextBtn: HTMLElement | null;
-    private projectCount: number;
-    private currentIndex: number;
-    private itemsPerView: number;
-    private resizeHandler: () => void;
-    private isTransitioning: boolean = false;
-    
-    constructor(carouselId: string, prevBtnId: string, nextBtnId: string, projectCount: number) {
-      this.carousel = document.getElementById(carouselId);
-      this.prevBtn = document.getElementById(prevBtnId);
-      this.nextBtn = document.getElementById(nextBtnId);
-      this.projectCount = projectCount;
-      this.currentIndex = 0;
-      this.itemsPerView = window.innerWidth >= 768 ? 2 : 1;
-      
-      // Bind del contexto para el event listener
-      this.resizeHandler = () => {
-        const newItemsPerView = window.innerWidth >= 768 ? 2 : 1;
-        if (newItemsPerView !== this.itemsPerView) {
-          this.itemsPerView = newItemsPerView;
-          this.updateCarousel();
-        }
-      };
-      
-      this.init();
-    }
-    
-    private init(): void {
-      if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
-      
-      // Crear elementos adicionales para navegación circular
-      this.createCircularItems();
-      
-      this.prevBtn.addEventListener('click', () => this.prev());
-      this.nextBtn.addEventListener('click', () => this.next());
-      
-      window.addEventListener('resize', this.resizeHandler);
-      
-      // Configurar el carrusel para empezar en la posición correcta
-      this.currentIndex = this.projectCount; // Empezar en el primer conjunto duplicado
-      this.updateCarousel(false); // Sin transición inicial
-      
-      // Escuchar el final de las transiciones
-      this.carousel.addEventListener('transitionend', () => this.handleTransitionEnd());
-    }
-    
-    private prev(): void {
-      if (this.isTransitioning) return;
-      
-      this.isTransitioning = true;
-      this.currentIndex--;
-      this.updateCarousel(true);
-    }
-    
-    private next(): void {
-      if (this.isTransitioning) return;
-      
-      this.isTransitioning = true;
-      this.currentIndex++;
-      this.updateCarousel(true);
-    }
-    
-    private updateCarousel(withTransition: boolean = true): void {
-      if (!this.carousel) return;
-      
-      const itemWidth = 100 / this.itemsPerView;
-      const translateX = -(this.currentIndex * itemWidth);
-      
-      // Habilitar o deshabilitar transición
-      this.carousel.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
-      this.carousel.style.transform = `translateX(${translateX}%)`;
-      
-      if (!withTransition) {
-        this.isTransitioning = false;
-      }
-    }
-    
-    private handleTransitionEnd(): void {
-      this.isTransitioning = false;
-      
-      // Reposicionar para efecto infinito
-      if (this.currentIndex >= this.projectCount * 2) {
-        // Si llegamos al final, volver al inicio de los elementos duplicados
-        this.currentIndex = this.projectCount;
-        this.updateCarousel(false);
-      } else if (this.currentIndex < this.projectCount) {
-        // Si llegamos al principio, ir al final de los elementos originales
-        this.currentIndex = this.projectCount * 2 - 1;
-        this.updateCarousel(false);
-      }
-    }
-    
-    private createCircularItems(): void {
-      if (!this.carousel) return;
-      
-      const originalItems = Array.from(this.carousel.children);
-      
-      // Crear elementos adicionales para navegación circular
-      // Agregar copias al final
-      originalItems.forEach(item => {
-        const clone = item.cloneNode(true) as HTMLElement;
-        this.carousel!.appendChild(clone);
-      });
-      
-      // Agregar copias al principio
-      for (let i = originalItems.length - 1; i >= 0; i--) {
-        const clone = originalItems[i].cloneNode(true) as HTMLElement;
-        this.carousel!.insertBefore(clone, this.carousel!.firstChild);
-      }
-    }
-    
-    public destroy(): void {
-      window.removeEventListener('resize', this.resizeHandler);
-    }
-  }
-  
-  // Función para obtener el número de proyectos de cada tipo
-  function getProjectCounts(): ProjectCounts {
-    const featuredItems = document.querySelectorAll('#featured-carousel .carousel-item');
-    const otherItems = document.querySelectorAll('#other-carousel .carousel-item');
-    
-    return {
-      featured: featuredItems.length,
-      other: otherItems.length
-    };
-  }
-  
-  // Inicializar carruseles cuando el DOM esté listo
-  document.addEventListener('DOMContentLoaded', function(): void {
-    const counts = getProjectCounts();
-    
-    // Inicializar carrusel de proyectos destacados
-    if (counts.featured > 2) {
-      new ProjectCarousel('featured-carousel', 'featured-prev', 'featured-next', counts.featured);
-    }
-    
-    // Inicializar carrusel de otros proyectos
-    if (counts.other > 2) {
-      new ProjectCarousel('other-carousel', 'other-prev', 'other-next', counts.other);
-    }
-  });
-</script>
+<script is:inline src="/js/carouselController.js" defer></script>
