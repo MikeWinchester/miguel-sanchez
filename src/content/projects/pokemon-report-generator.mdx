@@ -1,0 +1,161 @@
+---
+title: "Generador de Reportes Pokémon en Azure"
+description: "Solución escalable para generación de reportes CSV con datos enriquecidos de Pokémon, implementando arquitectura serverless en Azure."
+slug: "pokemon-report-generator"
+date: "2025-08-08"
+image: "/img/projects/queue/queue.png"
+technologies: ["Next.js", "FastAPI", "Azure Functions", "Azure SQL", "Blob Storage", "Terraform"]
+featured: true
+category: "Cloud Architecture"
+role: "Full Stack Developer"
+---
+
+# Generador de Reportes Pokémon en Azure
+
+## Visión General
+
+Desarrollé un sistema completo para generar reportes CSV con estadísticas detalladas de Pokémon, implementando tres funcionalidades clave:
+
+1. **Eliminación segura de reportes** (Frontend + Backend + Blob Storage)
+2. **Enriquecimiento de datos** (Azure Function + PokeAPI)
+3. **Muestreo aleatorio** (Frontend + Backend + Proceso de cola)
+
+![Diagrama de Arquitectura](/img/projects/queue/diagrama_queue.jpg)
+*Figura 1: Diagrama de la solución completa*
+
+## Arquitectura Técnica
+
+| Componente            | Tecnología          | Responsabilidad                          |
+|-----------------------|---------------------|------------------------------------------|
+| Frontend              | Next.js (React)     | Interfaz de usuario y gestión de estado  |
+| Backend API           | FastAPI (Python)    | Endpoints REST y lógica de negocio       |
+| Procesamiento         | Azure Functions     | Generación asíncrona de reportes         |
+| Almacenamiento        | Azure Blob Storage  | Archivos CSV generados                   |
+| Mensajería            | Queue Storage       | Comunicación entre servicios             |
+| Base de Datos         | Azure SQL           | Registros de reportes y metadatos        |
+| Eventos en Tiempo Real| Server-Sent Events  | Actualizaciones de progreso              |
+
+## Implementación Clave
+
+### 1. Eliminación Completa de Reportes
+
+Solución implementada en capas:
+
+```python
+# Backend - FastAPI
+@app.delete("/request/{id}")
+async def delete_request(id: int):
+    result = await delete_pokemon_request(id)
+    await sse_manager.broadcast({
+        "type": "report_deleted",
+        "data": {"id": id}
+    })
+    return result
+
+# Controlador
+async def delete_pokemon_request(id: int) -> dict:
+    blob = ABlob()
+    blob_name = f"poke_report_{id}.csv"
+    await blob.delete_blob(blob_name)
+    await execute_query("DELETE FROM pokequeue.request WHERE id = ?", (id,))
+```
+
+```jsx
+// Frontend - React
+const handleDeleteReport = async (reportId) => {
+  await deleteReport(reportId);
+  setReports(prev => prev.filter(r => r.ReportId !== reportId));
+};
+```
+
+### 2. Enriquecimiento de Datos
+
+Proceso en la Azure Function:
+
+```python
+def get_pokemon_details(pokemon_url: str) -> dict:
+    response = requests.get(pokemon_url)
+    data = response.json()
+    
+    return {
+        "hp": data["stats"][0]["base_stat"],
+        "attack": data["stats"][1]["base_stat"],
+        "defense": data["stats"][2]["base_stat"],
+        "special_attack": data["stats"][3]["base_stat"],
+        "special_defense": data["stats"][4]["base_stat"],
+        "speed": data["stats"][5]["base_stat"],
+        "abilities": ", ".join([a["ability"]["name"] for a in data["abilities"][:3]])
+    }
+```
+
+### 3. Muestreo Aleatorio
+
+Implementación del sampling:
+
+```python
+if sample_size and 0 < sample_size < len(pokemons):
+    pokemons = random.sample(pokemons, sample_size)
+```
+
+## Server-Sent Events (SSE)
+
+Implementé un sistema de notificaciones en tiempo real para:
+
+- Progreso de generación de reportes
+- Actualizaciones de estado
+- Eliminaciones confirmadas
+
+```python
+# Backend - SSE Manager
+class SSEManager:
+    def __init__(self):
+        self.connections: Dict[str, asyncio.Queue] = {}
+    
+    async def broadcast(self, message: dict):
+        for queue in self.connections.values():
+            await queue.put(json.dumps(message))
+
+# Frontend - Hook personalizado
+export function useSSE() {
+  const [data, setData] = useState(null);
+  
+  useEffect(() => {
+    const eventSource = new EventSource('/events');
+    eventSource.onmessage = (e) => setData(JSON.parse(e.data));
+    return () => eventSource.close();
+  }, []);
+  
+  return data;
+}
+```
+
+## Desafíos y Soluciones
+
+| Desafío                          | Solución Implementada               |
+|----------------------------------|-------------------------------------|
+| Sincronización estado frontend   | SSE + Context API                   |
+| Eliminación atómica              | Transacciones implícitas en Blob + SQL |
+| Muestreo de grandes datasets     | Procesamiento por lotes en función  |
+| Tiempos de respuesta PokeAPI     | Cache local + manejo de errores     |
+
+## Repositorios del Proyecto
+
+1. 🔗 [Frontend (Next.js)](https://github.com/MikeWinchester/pokemon_ui)
+2. 🔗 [Backend API (FastAPI)](https://github.com/MikeWinchester/pokemon_api)
+3. 🔗 [Azure Functions](https://github.com/MikeWinchester/pokemon_function)
+4. 🔗 [Database Scripts](https://github.com/MikeWinchester/pokemon_sql)
+5. 🔗 [Infra as Code (Terraform)](https://github.com/MikeWinchester/pokemon_terraform)
+
+## Demo en Vivo
+
+🌐 [Aplicación Desplegada en Azure](https://ui-pokequeue-dev-v1.azurewebsites.net)
+
+## Conclusión
+
+Este proyecto demostró mi capacidad para:
+- Diseñar arquitecturas serverless complejas
+- Implementar soluciones de procesamiento asíncrono
+- Integrar múltiples servicios de Azure
+- Desarrollar interfaces reactivas con actualizaciones en tiempo real
+
+La combinación de Next.js, FastAPI y Azure Functions resultó en una solución escalable y mantenible, con un costo operativo optimizado gracias al modelo serverless.
