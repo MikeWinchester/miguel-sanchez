@@ -32,6 +32,6 @@ export default defineConfig({
       theme: 'github-dark',
       wrap: true
     },
-    site: "https://miguel-sanchez.pages.dev"
-  }
+  },
+  site: "https://miguel-sanchez.pages.dev"
 });

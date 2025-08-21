@@ -1,35 +1,112 @@
 ---
 import '@/styles/global.css';
+import { personalInfo } from '@/data/personal';
 
 export interface Props {
   title: string;
   description?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article' | 'profile';
+  keywords?: string[];
+  author?: string;
+  canonicalURL?: string | URL;
+  noindex?: boolean;
 }
 
-const { title, description = "Portafolio de Desarrollador Web Junior" } = Astro.props;
+const {
+  title,
+  description = "Miguel Sánchez - Desarrollador Web Junior especializado en React, TypeScript y tecnologías modernas. Creando experiencias web únicas.",
+  image = "/og-image.jpg", // Crea esta imagen 1200x630px
+  imageAlt = "Miguel Sánchez - Desarrollador Web Junior",
+  type = "website",
+  keywords = ["desarrollador web", "backend", "React", "TypeScript", "JavaScript", "portfolio", "Miguel Sánchez", "Node", "Next", "Astro"],
+  author = "Miguel Sánchez",
+  canonicalURL = Astro.url,
+  noindex = false
+} = Astro.props;
+
+// Generar título optimizado
+const pageTitle = title.includes("Miguel Sánchez") ? title : `${title} | Miguel Sánchez - Desarrollador Web`;
+const keywordsString = keywords.join(", ");
+const imageUrl = new URL(image, Astro.url);
 ---
 
 <!DOCTYPE html>
 <html lang="es" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    
+    <!-- SEO Principal -->
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywordsString} />
+    <meta name="author" content={author} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Robots -->
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow" />}
+    
+    <!-- Favicon 
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" /> -->
     
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="Miguel Sánchez - Desarrollador Web" />
     
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={Astro.url} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <meta name="twitter:creator" content="@tu_twitter" /> <!-- Agrega tu handle -->
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Miguel Sánchez",
+        "jobTitle": "Desarrollador Web Junior",
+        "description": "Desarrollador Web especializado en React, TypeScript y tecnologías modernas",
+        "url": "https://miguel-sanchez.pages.dev",
+        "sameAs": [
+          "https://www.github.com/MikeWinchester",
+          "https://www.linkedin.com/in/miguelsanchez789"
+        ],
+        "knowsAbout": [
+          "JavaScript",
+          "TypeScript",
+          "React",
+          "Astro",
+          "Node.js",
+          "CSS",
+          "HTML"
+        ]
+      }
+    </script>
+    
+    <!-- Preconnect para mejor performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Tema color para navegadores móviles -->
+    <meta name="theme-color" content="#0f0f23" />
+    <meta name="msapplication-TileColor" content="#0f0f23" />
   </head>
   <body>
     <slot />
@@ -46,11 +123,14 @@ const { title, description = "Portafolio de Desarrollador Web Junior" } = Astro.
             const targetElement = document.getElementById(targetId || '');
             
             if (targetElement) {
-              const offsetTop = targetElement.offsetTop - 80; // Offset para navbar fijo
+              const offsetTop = targetElement.offsetTop - 80;
               window.scrollTo({
                 top: offsetTop,
                 behavior: 'smooth'
               });
+              
+              // Actualizar URL sin recargar página (mejor para SEO)
+              history.pushState(null, '', `#${targetId}`);
             }
           });
         });
@@ -66,11 +146,12 @@ const { title, description = "Portafolio de Desarrollador Web Junior" } = Astro.
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animate-fade-in');
+            // Opcional: dejar de observar después de animar
+            observer.unobserve(entry.target);
           }
         });
       }, observerOptions);
 
-      // Observar elementos con clase 'animate-on-scroll'
       document.addEventListener('DOMContentLoaded', () => {
         const elements = document.querySelectorAll('.animate-on-scroll');
         elements.forEach(el => observer.observe(el));

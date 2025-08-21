@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://miguel-sanchez.pages.dev/sitemap-index.xml

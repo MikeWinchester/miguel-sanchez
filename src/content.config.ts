@@ -9,7 +9,7 @@ const experiences = defineCollection({
     endDate: z.string(),
     description: z.string(),
     technologies: z.array(z.string()).optional(),
-    slug: z.string(),
+    slug: z.string().optional(),
   }),
 });
 
@@ -20,9 +20,14 @@ const projects = defineCollection({
     description: z.string(),
     image: z.string(),
     technologies: z.array(z.string()),
-    githubUrl: z.string(),
+    githubUrl: z.string().optional(),
     liveUrl: z.string().optional(),
     featured: z.boolean(),
-    slug: z.string(),
+    slug: z.string().optional(),
   }),
 });
+
+export const collections = {
+  experiences,
+  projects
+}
