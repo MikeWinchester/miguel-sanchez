@@ -5,7 +5,7 @@ export const personalInfo: PersonalInfo = {
   profession: "Desarrollador Web Junior",
   email: "aleminapavon30@gmail.com",
   location: "Tegucigalpa, Honduras",
-  bio: "Soy un desarrollador apasionado por crear soluciones tecnológicas innovadoras. Con más de un año de experiencia en desarrollo web, me especializo en tecnologías modernas como React, Node.js y bases de datos NoSQL.",
+  bio: "Soy un desarrollador apasionado por crear soluciones web modernas y escalables. Me adapto rápidamente a nuevas tecnologías y disfruto enfrentando desafíos complejos, desde el diseño de interfaces intuitivas hasta la implementación de arquitecturas robustas.",
   profileImage: "/img/profile.jpeg",
   aboutMeImage: "/img/about-me.jpeg",
   socialLinks: {

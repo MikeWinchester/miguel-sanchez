@@ -1,8 +1,8 @@
-/* Estilos existentes del archivo global.css */
+/* Estilos esenciales que no se pueden reemplazar con Tailwind */
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Reset y estilos base */
+/* Reset y estilos base necesarios */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
@@ -21,7 +21,7 @@ body {
   line-height: 1.6;
 }
 
-/* Scrollbar personalizado */
+/* Scrollbar personalizado - No disponible en Tailwind */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -39,6 +39,7 @@ body {
   background-color: #22c55e;
 }
 
+/* Animación de skill bars - Requiere CSS custom properties */
 .skill-bar {
   background: linear-gradient(to right, #22c55e, #4ade80);
   transition: width 1.5s ease-out;
@@ -50,15 +51,7 @@ body {
   width: var(--skill-width);
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-  
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
+/* Animaciones personalizadas necesarias */
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -99,6 +92,7 @@ body {
   }
 }
 
+/* Clases de animación de scroll personalizadas */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(10px);
@@ -118,10 +112,7 @@ body {
   animation: slideUp 0.5s ease-out;
 }
 
-.send-btn{
-  cursor: pointer;
-}
-
+/* Estilos de modal que requieren transiciones complejas */
 .modal-container {
   position: fixed;
   inset: 0;
@@ -177,152 +168,18 @@ body {
   transform: translateY(0);
   opacity: 1;
 }  
- 
-.modal-close-btn {
-  padding: 0.5rem 1.5rem;
-  background-color: #16a34a;
-  color: white;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
+
+/* Utilidad para truncar texto - No disponible por defecto en Tailwind */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* =================== ESTILOS MEJORADOS PARA CARRUSEL =================== */
-
-.carousel-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.carousel-container {
-  position: relative;
-  flex: 1;
-}
-
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.carousel-item {
-  width: 50%;
-  flex-shrink: 0;
-  padding: 0 1rem;
-}
-
-/* Botones de navegación del carrusel - Posicionados a los extremos */
-.carousel-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  opacity: 0.9;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  border: 2px solid rgba(34, 197, 94, 0.3);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.carousel-nav-btn:hover {
-  opacity: 1;
-  transform: translateY(-50%) scale(1.1);
-  border-color: rgba(34, 197, 94, 0.6);
-  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
-}
-
-.carousel-nav-btn:active {
-  transform: translateY(-50%) scale(0.95);
-}
-
-.carousel-nav-btn-left {
-  left: -1.5rem;
-}
-
-.carousel-nav-btn-right {
-  right: -1.5rem;
-}
-
-.carousel-nav-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  transform: translateY(-50%);
-}
-
-.carousel-nav-btn:disabled:hover {
-  opacity: 0.3;
-  transform: translateY(-50%);
-  border-color: rgba(34, 197, 94, 0.3);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Efectos visuales adicionales */
-.carousel-nav-btn::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(45deg, transparent, rgba(34, 197, 94, 0.1), transparent);
-  border-radius: inherit;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.carousel-nav-btn:hover::before {
-  opacity: 1;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .carousel-item {
-    width: 100%;
-    padding: 0 0.5rem;
-  }
-  
-  .carousel-container {
-    margin: 0 2.5rem;
-  }
-  
-  .carousel-nav-btn-left {
-    left: -1rem;
-  }
-  
-  .carousel-nav-btn-right {
-    right: -1rem;
-  }
-  
-  .carousel-nav-btn {
-    padding: 0.625rem;
-  }
-  
-  .carousel-nav-btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .carousel-container {
-    margin: 0 2rem;
-  }
-  
-  .carousel-nav-btn-left {
-    left: -0.75rem;
-  }
-  
-  .carousel-nav-btn-right {
-    right: -0.75rem;
-  }
-  
-  .carousel-nav-btn {
-    padding: 0.5rem;
-  }
-  
-  .carousel-nav-btn svg {
-    width: 1rem;
-    height: 1rem;
+/* Breakpoint personalizado para pantallas muy pequeñas */
+@media (min-width: 480px) {
+  .xs\:inline {
+    display: inline;
   }
 }

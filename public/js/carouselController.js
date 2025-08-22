@@ -1,8 +1,10 @@
 class ProjectCarousel {
-  constructor(carouselId, prevBtnId, nextBtnId, projectCount) {
+  constructor(carouselId, prevBtnId, nextBtnId, projectCount, mobilePrevBtnId = null, mobileNextBtnId = null) {
     this.carousel = document.getElementById(carouselId);
     this.prevBtn = document.getElementById(prevBtnId);
     this.nextBtn = document.getElementById(nextBtnId);
+    this.mobilePrevBtn = mobilePrevBtnId ? document.getElementById(mobilePrevBtnId) : null;
+    this.mobileNextBtn = mobileNextBtnId ? document.getElementById(mobileNextBtnId) : null;
     this.projectCount = projectCount;
     this.currentIndex = 0;
     this.itemsPerView = window.innerWidth >= 768 ? 2 : 1;
@@ -14,6 +16,7 @@ class ProjectCarousel {
       if (newItemsPerView !== this.itemsPerView) {
         this.itemsPerView = newItemsPerView;
         this.updateCarousel();
+        this.updateButtonVisibility();
       }
     };
     
@@ -21,26 +24,61 @@ class ProjectCarousel {
   }
   
   init() {
-    if (!this.carousel || !this.prevBtn || !this.nextBtn) return;
+    if (!this.carousel) return;
     
-    // Crear elementos adicionales para navegación circular
-    this.createCircularItems();
+    // Verificar si los botones deben ser visibles
+    this.updateButtonVisibility();
     
-    this.prevBtn.addEventListener('click', () => this.prev());
-    this.nextBtn.addEventListener('click', () => this.next());
+    // Solo inicializar carrusel si es necesario
+    if (this.shouldShowButtons()) {
+      // Crear elementos adicionales para navegación circular
+      this.createCircularItems();
+      
+      // Event listeners para botones de desktop
+      if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prev());
+      if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
+      
+      // Event listeners para botones de móvil
+      if (this.mobilePrevBtn) this.mobilePrevBtn.addEventListener('click', () => this.prev());
+      if (this.mobileNextBtn) this.mobileNextBtn.addEventListener('click', () => this.next());
+      
+      // Configurar el carrusel para empezar en la posición correcta
+      this.currentIndex = this.projectCount; // Empezar en el primer conjunto duplicado
+      this.updateCarousel(false); // Sin transición inicial
+      
+      // Escuchar el final de las transiciones
+      this.carousel.addEventListener('transitionend', () => this.handleTransitionEnd());
+    }
     
     window.addEventListener('resize', this.resizeHandler);
+  }
+  
+  shouldShowButtons() {
+    const isMobile = window.innerWidth < 768;
+    return isMobile ? this.projectCount > 1 : this.projectCount > 2;
+  }
+  
+  updateButtonVisibility() {
+    const shouldShow = this.shouldShowButtons();
+    const isMobile = window.innerWidth < 768;
     
-    // Configurar el carrusel para empezar en la posición correcta
-    this.currentIndex = this.projectCount; // Empezar en el primer conjunto duplicado
-    this.updateCarousel(false); // Sin transición inicial
+    // Botones de desktop
+    if (this.prevBtn && this.nextBtn) {
+      const showDesktop = !isMobile && this.projectCount > 2;
+      this.prevBtn.style.display = showDesktop ? 'block' : 'none';
+      this.nextBtn.style.display = showDesktop ? 'block' : 'none';
+    }
     
-    // Escuchar el final de las transiciones
-    this.carousel.addEventListener('transitionend', () => this.handleTransitionEnd());
+    // Botones de móvil
+    if (this.mobilePrevBtn && this.mobileNextBtn) {
+      const showMobile = isMobile && this.projectCount > 1;
+      this.mobilePrevBtn.style.display = showMobile ? 'block' : 'none';
+      this.mobileNextBtn.style.display = showMobile ? 'block' : 'none';
+    }
   }
   
   prev() {
-    if (this.isTransitioning) return;
+    if (this.isTransitioning || !this.shouldShowButtons()) return;
     
     this.isTransitioning = true;
     this.currentIndex--;
@@ -48,7 +86,7 @@ class ProjectCarousel {
   }
   
   next() {
-    if (this.isTransitioning) return;
+    if (this.isTransitioning || !this.shouldShowButtons()) return;
     
     this.isTransitioning = true;
     this.currentIndex++;
@@ -90,7 +128,9 @@ class ProjectCarousel {
     
     const originalItems = Array.from(this.carousel.children);
     
-    // Crear elementos adicionales para navegación circular
+    // Solo crear elementos circulares si es necesario
+    if (originalItems.length === 0) return;
+    
     // Agregar copias al final
     originalItems.forEach(item => {
       const clone = item.cloneNode(true);
@@ -124,13 +164,27 @@ function getProjectCounts() {
 document.addEventListener('DOMContentLoaded', function() {
   const counts = getProjectCounts();
   
-  // Inicializar carrusel de proyectos destacados
-  if (counts.featured > 2) {
-    new ProjectCarousel('featured-carousel', 'featured-prev', 'featured-next', counts.featured);
+  // Inicializar carrusel de proyectos destacados si hay proyectos
+  if (counts.featured > 0) {
+    new ProjectCarousel(
+      'featured-carousel', 
+      'featured-prev', 
+      'featured-next', 
+      counts.featured,
+      'featured-prev-mobile',
+      'featured-next-mobile'
+    );
   }
   
-  // Inicializar carrusel de otros proyectos
-  if (counts.other > 2) {
-    new ProjectCarousel('other-carousel', 'other-prev', 'other-next', counts.other);
+  // Inicializar carrusel de otros proyectos si hay proyectos
+  if (counts.other > 0) {
+    new ProjectCarousel(
+      'other-carousel', 
+      'other-prev', 
+      'other-next', 
+      counts.other,
+      'other-prev-mobile',
+      'other-next-mobile'
+    );
   }
 });

@@ -2,11 +2,19 @@
 import ProjectCard from './ProjectCard.astro';
 import { personalInfo } from '@/data/personal';
 import type { Project } from '@/types';
+
 const projectFiles: Record<string, { frontmatter: Project }> = import.meta.glob('../content/projects/*.mdx', { eager: true });
-const projects = Object.values(projectFiles).map((module) => ({
-  ...module.frontmatter,
-  id: module.frontmatter.slug || module.frontmatter.title.toLowerCase().replace(/\s+/g, '-')
-}));
+
+// Ordenar proyectos por fecha (más recientes primero)
+const projects = Object.values(projectFiles)
+  .map((module) => ({
+    ...module.frontmatter,
+    id: module.frontmatter.slug || module.frontmatter.title.toLowerCase().replace(/\s+/g, '-'),
+    // Convertir fecha a objeto Date para ordenamiento
+    dateObj: module.frontmatter.date ? new Date(module.frontmatter.date) : new Date(0)
+  }))
+  .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime()); // Más recientes primero
+
 const featuredProjects = projects.filter(project => project.featured);
 const otherProjects = projects.filter(project => !project.featured);
 ---
@@ -28,40 +36,66 @@ const otherProjects = projects.filter(project => !project.featured);
       {featuredProjects.length > 0 && (
         <div class="mb-20">
           <h3 class="text-2xl font-bold text-white mb-10">Proyectos Destacados</h3>
-          <div class="relative carousel-wrapper">
-            {featuredProjects.length > 1 && (
-              <button 
-                id="featured-prev" 
-                class="carousel-nav-btn carousel-nav-btn-left bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm"
-                aria-label="Proyecto anterior"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            )}
-            
-            <div class="carousel-container overflow-hidden mx-16">
-              <div id="featured-carousel" class="carousel-track flex transition-transform duration-500 ease-in-out">
-                {featuredProjects.map((project) => (
-                  <div class="carousel-item flex-shrink-0 w-2/3 px-4">
-                    <ProjectCard project={project} />
-                  </div>
-                ))}
+          <div class="relative">
+            <div class="relative flex items-center">
+              {/* Botones superpuestos para móvil */}
+              {((featuredProjects.length > 1)) && (
+                <>
+                  <button 
+                    id="featured-prev-mobile" 
+                    class="md:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-green-700/30 hover:bg-green-600/80 active:bg-green-600 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/50 backdrop-blur-sm border border-green-500/20 hover:border-green-500/60 opacity-40 hover:opacity-100 active:opacity-100"
+                    aria-label="Proyecto anterior"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button 
+                    id="featured-next-mobile" 
+                    class="md:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-green-700/30 hover:bg-green-600/80 active:bg-green-600 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/50 backdrop-blur-sm border border-green-500/20 hover:border-green-500/60 opacity-40 hover:opacity-100 active:opacity-100"
+                    aria-label="Siguiente proyecto"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {/* Botones para desktop */}
+              {((featuredProjects.length > 2)) && (
+                <>
+                  <button 
+                    id="featured-prev" 
+                    class="hidden md:block absolute left-0 z-10 bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm border-2 border-green-500/30 hover:border-green-500/60"
+                    aria-label="Proyecto anterior"
+                  >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button 
+                    id="featured-next" 
+                    class="hidden md:block absolute right-0 z-10 bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm border-2 border-green-500/30 hover:border-green-500/60"
+                    aria-label="Siguiente proyecto"
+                  >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+              
+              <div class={`overflow-hidden w-full ${featuredProjects.length > 2 ? 'md:mx-16' : ''}`}>
+                <div id="featured-carousel" class="flex transition-transform duration-500 ease-in-out">
+                  {featuredProjects.map((project) => (
+                    <div class="carousel-item flex-shrink-0 w-full md:w-1/2 px-2 md:px-4">
+                      <ProjectCard project={project} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-
-            {featuredProjects.length > 1 && (
-              <button 
-                id="featured-next" 
-                class="carousel-nav-btn carousel-nav-btn-right bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm"
-                aria-label="Siguiente proyecto"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -70,40 +104,66 @@ const otherProjects = projects.filter(project => !project.featured);
       {otherProjects.length > 0 && (
         <div class="mb-20">
           <h3 class="text-2xl font-bold text-white mb-10">Otros Proyectos</h3>
-          <div class="relative carousel-wrapper">
-            {otherProjects.length > 1 && (
-              <button 
-                id="other-prev" 
-                class="carousel-nav-btn carousel-nav-btn-left bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm"
-                aria-label="Proyecto anterior"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            )}
-            
-            <div class="carousel-container overflow-hidden mx-16">
-              <div id="other-carousel" class="carousel-track flex transition-transform duration-500 ease-in-out">
-                {otherProjects.map((project) => (
-                  <div class="carousel-item flex-shrink-0 w-2/3 px-4">
-                    <ProjectCard project={project} />
-                  </div>
-                ))}
+          <div class="relative">
+            <div class="relative flex items-center">
+              {/* Botones superpuestos para móvil */}
+              {((otherProjects.length > 1)) && (
+                <>
+                  <button 
+                    id="other-prev-mobile" 
+                    class="md:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-green-700/30 hover:bg-green-600/80 active:bg-green-600 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/50 backdrop-blur-sm border border-green-500/20 hover:border-green-500/60 opacity-40 hover:opacity-100 active:opacity-100"
+                    aria-label="Proyecto anterior"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button 
+                    id="other-next-mobile" 
+                    class="md:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-green-700/30 hover:bg-green-600/80 active:bg-green-600 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/50 backdrop-blur-sm border border-green-500/20 hover:border-green-500/60 opacity-40 hover:opacity-100 active:opacity-100"
+                    aria-label="Siguiente proyecto"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {/* Botones para desktop */}
+              {((otherProjects.length > 2)) && (
+                <>
+                  <button 
+                    id="other-prev" 
+                    class="hidden md:block absolute left-0 z-10 bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm border-2 border-green-500/30 hover:border-green-500/60"
+                    aria-label="Proyecto anterior"
+                  >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button 
+                    id="other-next" 
+                    class="hidden md:block absolute right-0 z-10 bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm border-2 border-green-500/30 hover:border-green-500/60"
+                    aria-label="Siguiente proyecto"
+                  >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+              
+              <div class={`overflow-hidden w-full ${otherProjects.length > 2 ? 'md:mx-16' : ''}`}>
+                <div id="other-carousel" class="flex transition-transform duration-500 ease-in-out">
+                  {otherProjects.map((project) => (
+                    <div class="carousel-item flex-shrink-0 w-full md:w-1/2 px-2 md:px-4">
+                      <ProjectCard project={project} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-
-            {otherProjects.length > 1 && (
-              <button 
-                id="other-next" 
-                class="carousel-nav-btn carousel-nav-btn-right bg-green-700/90 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-slate-900 hover:shadow-lg hover:shadow-green-800/25 backdrop-blur-sm"
-                aria-label="Siguiente proyecto"
-              >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -125,5 +185,55 @@ const otherProjects = projects.filter(project => !project.featured);
     </div>
   </div>
 </section>
+
+<script is:inline>
+// Funciones para controlar visibilidad de botones según el número de proyectos
+function updateCarouselButtons() {
+  const featuredItems = document.querySelectorAll('#featured-carousel .carousel-item');
+  const otherItems = document.querySelectorAll('#other-carousel .carousel-item');
+  
+  const featuredPrev = document.getElementById('featured-prev');
+  const featuredNext = document.getElementById('featured-next');
+  const featuredMobilePrev = document.getElementById('featured-prev-mobile');
+  const featuredMobileNext = document.getElementById('featured-next-mobile');
+  
+  const otherPrev = document.getElementById('other-prev');
+  const otherNext = document.getElementById('other-next');
+  const otherMobilePrev = document.getElementById('other-prev-mobile');
+  const otherMobileNext = document.getElementById('other-next-mobile');
+  
+  const isMobile = window.innerWidth < 768;
+  
+  // Proyectos destacados
+  if (featuredPrev && featuredNext) {
+    const shouldShowDesktop = !isMobile && featuredItems.length > 2;
+    featuredPrev.style.display = shouldShowDesktop ? 'block' : 'none';
+    featuredNext.style.display = shouldShowDesktop ? 'block' : 'none';
+  }
+  
+  if (featuredMobilePrev && featuredMobileNext) {
+    const shouldShowMobile = isMobile && featuredItems.length > 1;
+    featuredMobilePrev.style.display = shouldShowMobile ? 'block' : 'none';
+    featuredMobileNext.style.display = shouldShowMobile ? 'block' : 'none';
+  }
+  
+  // Otros proyectos
+  if (otherPrev && otherNext) {
+    const shouldShowDesktop = !isMobile && otherItems.length > 2;
+    otherPrev.style.display = shouldShowDesktop ? 'block' : 'none';
+    otherNext.style.display = shouldShowDesktop ? 'block' : 'none';
+  }
+  
+  if (otherMobilePrev && otherMobileNext) {
+    const shouldShowMobile = isMobile && otherItems.length > 1;
+    otherMobilePrev.style.display = shouldShowMobile ? 'block' : 'none';
+    otherMobileNext.style.display = shouldShowMobile ? 'block' : 'none';
+  }
+}
+
+// Ejecutar al cargar y al cambiar el tamaño de ventana
+document.addEventListener('DOMContentLoaded', updateCarouselButtons);
+window.addEventListener('resize', updateCarouselButtons);
+</script>
 
 <script is:inline src="/js/carouselController.js" defer></script>
